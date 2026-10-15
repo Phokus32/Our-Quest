@@ -1,9 +1,9 @@
-// EDIT THIS FILE BEFORE DEPLOYING. The publishable key is safe to expose in browser code.
+// Our Quest V2.0 — Supabase project connected. Fill in the two login emails below.
 window.OUR_QUEST_CONFIG = {
-  url: "", // https://YOUR-PROJECT.supabase.co
-  anonKey: "", // Supabase publishable (or legacy anon) key, NEVER service_role
+  url: "https://ermelqildikjzbuzjdhj.supabase.co",
+  anonKey: "sb_publishable_2DtHZcMKTn4d0xhv_itBDw_ceEg5tXM",
   members: {
-    matthew: "", // Matthew's login email
-    beth: "" // Beth's login email
+    matthew: "matthewJblackwood@gmail.com",
+    beth: "BethBBlackwood@gmail.com"
   }
 };
