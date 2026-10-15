@@ -1,36 +1,35 @@
-# Our Quest - V1.0 Stage 1 Interactive Foundation
+# Our Quest V1.1 — Local Interactive Prototype
 
-This is an **interactive, local-only foundation**, not the fully deployed two-account V1.0. The entire 70-decision scope is planned for later stages. Do not treat the player switcher as authentication or local data as cloud sync.
+This release expands the Stage 1 prototype. Open `index.html` in a desktop browser, or host the folder on HTTPS for PWA installation. The included approved-style Our Quest icon, manifest and service worker are preserved.
 
-## Run it
+## What's new in V1.1
 
-1. Unzip all files into a folder.
-2. Open `index.html` in a modern browser to try the local demo. (Browser storage behavior may differ on file URLs.)
-3. For the installable PWA, serve the directory over HTTPS, such as GitHub Pages. The app includes `manifest.webmanifest`, a service worker and the approved-logo-derived icon.
-4. In the mobile browser, use Add to Home Screen / Install app.
+- Quest acceptance, submission and **sender approval** now credit the recipient XP once per approved completion. Quest limits of 1–20 completions per day can be configured on creation. A quest can be repeated after approval until its limit is reached, or on the following day.
+- Only the Matthew demo profile can create/edit tasks, create categories, edit rewards and change economy settings. **This is a UI-only demo restriction, not secure authorization.**
+- Admin-created categories with recurrence defaults, task duplication and bulk category schedule changes.
+- Tasks support daily, weekly (Monday-start), monthly, quarterly, annual and one-time recurrence, per-period completion limits, optional hours and optional weekdays. A completed task disables until its next eligible period.
+- Level titles, six initial achievements, a 35-day activity heatmap and XP/gold transaction ledger.
+- Daily, weekly and monthly champion calculation, with configurable rewards. The demo settles past periods when the app opens. Winner rewards are not included in competition scores. Historical champion accuracy is limited by locally recorded ledger data.
+- Coupon wallet, redemption request, provider fulfillment confirmation and purchase/usage history. Includes Dinner at Olive Garden (1,000 gold).
+- Pending quest/coupon approval inbox, recent-completion undo with XP/gold reversal and data export/restore.
 
-## What works in Stage 1
+## Test quest approval
 
-- Responsive fantasy-themed dashboard, desktop sidebar and mobile navigation.
-- Two selectable local preview profiles with separate XP, coins and activity records.
-- Create and edit shared/private tasks, log XP, levels and automatic coin earnings.
-- Send quests, accept/decline, mark complete and approve to award XP.
-- Create and buy coupons, wallet and simplified redemption.
-- Local message history, personal/shared goals, simple statistics and history.
-- Local settings, JSON backup/export and import/restore.
-- Installable PWA on HTTPS and basic static-file offline caching.
+1. Select Matthew. Open Quests and send a quest to Beth.
+2. Select Beth. Accept the quest and mark it complete. No XP should be awarded yet.
+3. Select Matthew. Open Approvals or Quests and approve the completion.
+4. Select Beth. The approved XP and resulting gold should now appear. Repeat the quest if configured for multiple completions.
 
-## Not yet implemented or secure
+## Test task recurrence
 
-- Real two-user sign-in, cloud database, synchronization across devices, Row Level Security, protected XP transactions, secure privacy enforcement.
-- Real-time messaging, push notifications, read receipts, images and attachments.
-- Complete five-tier task configuration, schedules, streak protection, challenges, infinite achievements, prestige, coupon provider approvals and comprehensive analytics.
-- Production-grade offline write queue, conflict resolution, automated backups, restore verification, migrations and deployment tests.
+1. Select Matthew. Open Tasks > Create Task.
+2. Select a category, recurrence, XP value and maximum completions per period.
+3. Complete the task until its counter reaches the maximum. The button should disable until the next period.
 
-## Data warning
+## Limitations and important safety notes
 
-Data is saved in browser `localStorage` and may be lost if browser data is cleared. Export JSON backups frequently. A shared browser user can switch between both preview identities and see their data. **Do not store sensitive private information in this stage.**
+**This is NOT yet the final cloud-connected V1.0 described in the 70-question specification.** Both profiles are simulated in the same browser. There is no Supabase connection, real authentication, cross-device synchronization, true privacy enforcement, secure admin permissions, remote messaging, phone push notifications, guaranteed automatic backups or reliable server-side scheduled settlement. Anyone with access to the browser storage can change its data. Do not use this build for sensitive/private task details or as a trusted real-world ledger.
 
-## Next development milestone
+The app retains the Stage 1 localStorage key so existing data in the same browser and origin can migrate. Export a backup before replacing a deployed copy. If the origin changes, data will not automatically follow. Old quest/log records are retained but may lack newer ledger metadata. Backup/restore is manual. Undo is limited to recent task completions and can produce a negative coin balance if coins have already been spent.
 
-Add Supabase Auth, PostgreSQL schema and Row Level Security, backend-validated XP/coins and proper two-device synchronization. Keep secrets out of frontend source code. Publishable keys may be public, service-role keys must never be shipped to the browser.
+The first prototype remains a standalone HTML/CSS/JavaScript application. Further backend integration is required before two real devices can use it together.
