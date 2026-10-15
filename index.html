@@ -473,4 +473,62 @@ const v16OldSettingsView=settingsView;
 settingsView=function(){return v16OldSettingsView().replace(/V1\.5\.0/g,'V1.6.0')+`<section class="card section"><h2>What's New • V1.6.0</h2><p class="muted tiny">Drag-and-resize atlas icon crops, accurate previews, reusable crop picker for tasks and goal milestones, coupon icon selection and editing, special one-time coupon purchase limits.</p></section>`};
 // Ensure the new renderer is used immediately on initial load.
 render();
-</script></body></html>
+</script>
+<script>
+/* Our Quest v1.7.0: four clean transparent atlases and free-position crop editor */
+const V17_PAGES=[
+ {id:'everyday',name:'Everyday Adventures · Clean',src:'assets/everyday-adventures-atlas.png',builtin:true},
+ {id:'more-adventures',name:'More Adventures · Clean',src:'assets/more-adventures-atlas.png',builtin:true},
+ {id:'life-adventures',name:'Life & Adventures · Clean',src:'assets/life-adventures-atlas.png',builtin:true},
+ {id:'grand-adventures',name:'Grand Adventures · New',src:'assets/grand-adventures-atlas.png',builtin:true}
+];
+for(const p of V17_PAGES){
+ const existing=data.atlasPages.find(a=>a.id===p.id);
+ if(existing)Object.assign(existing,p);else data.atlasPages.push({...p});
+ atlasSources[p.id]=p.src;
+}
+// Maintain existing crop references. New atlas pages are added without resetting tasks or coupons.
+save();
+// Allow user-uploaded free-position atlases without an artificial 10x10 restriction.
+uploadAtlas=async function(e){
+ if(!isAdmin())return;
+ const file=e.target.files?.[0];if(!file)return;
+ if(!file.type.startsWith('image/'))return notify('Choose a PNG, WebP or JPEG image');
+ try{
+  const bmp=await createImageBitmap(file);
+  const side=Math.min(2048,Math.max(bmp.width,bmp.height));
+  const c=document.createElement('canvas');c.width=c.height=side;
+  const ctx=c.getContext('2d');
+  const scale=side/Math.max(bmp.width,bmp.height);
+  ctx.drawImage(bmp,(side-bmp.width*scale)/2,(side-bmp.height*scale)/2,bmp.width*scale,bmp.height*scale);
+  bmp.close();
+  const blob=await new Promise(resolve=>c.toBlob(resolve,'image/webp',.92));
+  if(!blob)throw Error('Could not encode image');
+  const name=prompt('Name this icon page',file.name.replace(/\.[^.]+$/,''));
+  if(name===null)return;
+  const id=uid();await atlasStore(id,blob);
+  atlasSources[id]=URL.createObjectURL(blob);
+  data.atlasPages.push({id,name:name.trim()||'New Icon Page',builtin:false});
+  atlasPickerPage=id;save();render();notify('Icon atlas added');
+ }catch(err){notify('Atlas upload failed: '+err.message)}
+};
+// Replace the old atlas grid view completely. The original images contain no overlay grid.
+atlasView=function(){
+ const pg=data.atlasPages.find(p=>p.id===atlasPickerPage)||data.atlasPages[0];
+ return `<div class="row between wrap"><p class="muted">Four built-in icon sheets with no grid lines. Use the movable selection square when assigning icons.</p>${isAdmin()?`<label class="btn" style="cursor:pointer">＋ Upload Icon Sheet<input type="file" accept="image/*" style="display:none" onchange="uploadAtlas(event)"></label>`:''}</div>
+ <div class="card"><h2>▦ Icon Atlas Library (${data.atlasPages.length} pages)</h2>
+ <div class="field"><label>Icon sheet</label><select onchange="atlasPickerPage=this.value;render()">${data.atlasPages.map(p=>`<option value="${safe(p.id)}" ${p.id===pg.id?'selected':''}>${safe(p.name)}</option>`).join('')}</select></div>
+ <img src="${atlasSource(pg.id)}" alt="${safe(pg.name)}" style="display:block;width:100%;max-width:700px;margin:auto;border-radius:8px;background:#20162f"/>
+ ${isAdmin()&&!pg.builtin?`<div class="row wrap" style="margin-top:12px"><button class="btn2" onclick="renameAtlas('${pg.id}')">Rename Page</button><button class="btn2" onclick="deleteAtlas('${pg.id}')">Delete Page</button></div>`:''}
+ </div><div class="card section"><h2>How to select icons</h2><p class="muted tiny">In Tasks, Coupons or Goals choose an atlas icon. Tap or drag the gold square over the image, adjust its size and confirm. Uploaded sheets can have any icon arrangement. All built-in sheets are transparent and grid-free.</p></div>`;
+};
+// Correct crop preview math and ensure selection box stays square on normalized atlases.
+const v17PreviousCropHtml=v16CropHtml;
+v16CropHtml=function(){return v17PreviousCropHtml().replace('Works with all three atlas pages and uploaded sheets.','Works with all four built-in atlas pages and uploaded sheets.');};
+const v17PreviousSettingsView=settingsView;
+settingsView=function(){return v17PreviousSettingsView().replaceAll('V1.6.0','V1.7.0')+`<section class="card section"><h2>What's New • V1.7.0</h2><p class="muted tiny">Four transparent, grid-free icon atlases, including Grand Adventures. Improved icon crop selection and flexible image uploads. Existing icon assignments remain available.</p></section>`};
+const v17PreviousRender=render;
+render=function(){v17PreviousRender();document.querySelectorAll('.sidefoot').forEach(el=>el.innerHTML=el.innerHTML.replace(/V1\.6\.0|V1\.5\.0/g,'V1.7.0'));};
+render();
+</script>
+</body></html>
