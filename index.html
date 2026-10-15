@@ -5,6 +5,17 @@
 .photoGallery{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.proofImg{width:112px;height:112px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:#241a3b;cursor:zoom-in}.taskArt{height:34px;width:34px;object-fit:cover;border-radius:8px}.photoGallery img:active{transform:scale(1.04)}.modal{max-height:92vh;overflow-y:auto}.photoGallery img{max-width:100%}
 
 .atlas-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;width:100%;max-width:670px}.atlas-cell{position:relative;aspect-ratio:1;background:transparent;border:1px solid #74578b;border-radius:4px;padding:0;overflow:hidden}.atlas-cell:hover{border:2px solid #f5c77d;filter:brightness(1.13)}.atlas-cell.chosen{outline:3px solid #f5c77d;outline-offset:0;box-shadow:0 0 15px #f5c77d80}.atlas-icon{display:block;aspect-ratio:1;background-repeat:no-repeat;background-size:1000% 1000%;background-position:var(--ax) var(--ay);width:100%;height:100%}.atlas-preview{width:70px;height:70px;border-radius:12px;overflow:hidden;background:#34254b}.atlas-panel{margin:12px 0}.task.is-done{filter:grayscale(1);opacity:.52!important}.task.is-done .taskIcon{filter:grayscale(1)}.bonus-strip{border:1px solid #8d6b35;background:#33253b;border-radius:12px;padding:13px;margin:12px 0}.weight-progress{font-size:12px;color:var(--muted);margin-top:8px}.atlas-pick-modal .modal{width:min(800px,100%)}
+
+/* V1.6 adjustable crop picker: source image is never sliced into fixed grid cells. */
+.crop-stage{position:relative;width:min(100%,640px);margin:12px auto;touch-action:none;user-select:none;cursor:crosshair;line-height:0;border:1px solid #8b70aa;border-radius:10px;overflow:hidden;background:#241832}
+.crop-stage>img{display:block;width:100%;height:auto;pointer-events:none}
+.crop-box{position:absolute;box-sizing:border-box;border:3px solid #ffda76;background:rgba(244,198,77,.12);box-shadow:0 0 0 1px #21112e,0 0 0 9999px rgba(10,6,20,.26),0 0 20px #ffda76aa;pointer-events:none;border-radius:4px}
+.crop-box:after{content:'↘';position:absolute;right:-1px;bottom:-1px;background:#ffda76;color:#241832;font-size:15px;line-height:16px;padding:1px 4px;border-radius:3px}
+.crop-picker-preview{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px;background:#2a203a;border-radius:10px}
+.crop-picker-preview .atlas-icon{width:76px!important;height:76px!important;position:relative!important;inset:auto!important;flex-shrink:0}
+.crop-slider{width:100%;accent-color:#f3ca74}
+.coupon-icon-picker{display:flex;align-items:center;gap:10px}
+.coupon-icon-picker .reward-icon{width:48px;height:48px}
 </style><style>
 .atlas-grid{gap:0!important;max-width:700px!important;border:1px solid #6c5187;border-radius:8px;overflow:hidden}
 .atlas-cell{border:1px solid #655079!important;border-radius:0!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
@@ -392,4 +403,74 @@ taskLine=function(t){let html=v15PreviousTaskLine(t);return html.replace('<div c
 const v15PreviousSettingsView=settingsView;
 settingsView=function(){return v15PreviousSettingsView()+`<section class="card section"><h2>What's New • V1.5.0</h2><p class="muted tiny">Fixed oversized atlas icons on Tasks. Admin can delete unused coupons or archive purchased coupons without losing history. Weight goals now have editable goal icons, multiple milestones and reward icons.</p></section>`};
 
+
+/* OUR QUEST 1.6.0 — normalized free-position icon crops and coupon atlas artwork. */
+const V16_VERSION='1.6.0';
+let v16Crop=null,v16Target='task',v16CouponDraft=null,v16Pointer=null;
+const v16LegacyIconHtml=atlasIconHtml;
+atlasIconHtml=function(ref){
+ if(ref&&Number.isFinite(Number(ref.x))&&Number.isFinite(Number(ref.y))&&Number(ref.size)>0&&atlasSource(ref.page)){
+  const z=Math.min(.8,Math.max(.015,Number(ref.size))),x=Math.min(1-z,Math.max(0,Number(ref.x))),y=Math.min(1-z,Math.max(0,Number(ref.y)));
+  const src=atlasSource(ref.page).replaceAll('\\','\\\\').replaceAll("'","%27");
+  return `<span class="atlas-icon" role="img" aria-label="Selected atlas crop" style="background-image:url('${src}');background-repeat:no-repeat;background-size:${(100/z).toFixed(5)}% ${(100/z).toFixed(5)}% !important;background-position:${(x/(1-z)*100).toFixed(5)}% ${(y/(1-z)*100).toFixed(5)}%;width:100%;height:100%;display:block"></span>`;
+ }
+ return v16LegacyIconHtml(ref);
+};
+function v16CropFrom(ref){
+ if(ref&&Number.isFinite(Number(ref.x))&&Number(ref.size)>0)return {page:ref.page,x:Number(ref.x),y:Number(ref.y),size:Number(ref.size)};
+ if(ref&&Number.isInteger(Number(ref.cell))){let c=Number(ref.cell);return {page:ref.page,x:(c%10)/10,y:Math.floor(c/10)/10,size:.1};}
+ return {page:atlasPickerPage||data.atlasPages[0].id,x:.35,y:.35,size:.12};
+}
+function v16OpenCrop(target='task',index=-1){
+ if(!isAdmin())return notify('Only Matthew can assign artwork');
+ v16Target=target;
+ if(target==='goal'||target==='milestone'){if(!v15GoalDraft)return;v15SyncDraftForm();v15IconTarget={target,index};}
+ let current=target==='task'?pendingAtlas:target==='coupon'?v16CouponDraft?.atlas:target==='goal'?v15GoalDraft?.icon:v15GoalDraft?.milestones?.[index]?.icon;
+ v16Crop=v16CropFrom(current);atlasPickerPage=v16Crop.page;
+ document.getElementById('v16CropPicker')?.remove();document.body.insertAdjacentHTML('beforeend',v16CropHtml());v16UpdateCrop();
+}
+function v16CropHtml(){
+ let page=data.atlasPages.find(p=>p.id===v16Crop.page)||data.atlasPages[0];
+ return `<div class="modalback atlas-pick-modal" id="v16CropPicker" onclick="if(event.target===this)v16CloseCrop()"><div class="modal" style="width:min(810px,98vw);max-height:94vh;overflow:auto"><div class="row between"><h2>▦ Position Your Icon</h2><button class="iconbtn" type="button" onclick="v16CloseCrop()">✕</button></div><p class="tiny muted">Tap or drag the gold square over any icon. Adjust its size until the artwork fits. Works with all three atlas pages and uploaded sheets.</p><div class="field"><label>Icon sheet</label><select id="v16CropPage" onchange="v16ChangeCropPage(this.value)">${data.atlasPages.map(p=>`<option value="${safe(p.id)}" ${p.id===page.id?'selected':''}>${safe(p.name)}</option>`).join('')}</select></div><div class="crop-stage" id="v16CropStage" onpointerdown="v16PointerDown(event)" onpointermove="v16PointerMove(event)" onpointerup="v16PointerUp(event)" onpointercancel="v16PointerUp(event)"><img id="v16CropSheet" src="${atlasSource(page.id)}" alt="${safe(page.name)} atlas image" draggable="false"><div id="v16CropBox" class="crop-box"></div></div><div class="field"><label>Selection size <b id="v16CropSizeLabel">12%</b> of sheet width</label><input class="crop-slider" id="v16CropSize" type="range" min="5" max="24" step="0.5" value="${(v16Crop.size*100).toFixed(1)}" oninput="v16ResizeCrop(this.value)"></div><div class="crop-picker-preview"><div class="atlas-preview" id="v16CropPreview" style="width:76px;height:76px"></div><span class="tiny muted">Live preview: this is how the cropped icon will appear on tasks, coupons and goals.</span></div><div class="row wrap" style="margin-top:14px;justify-content:flex-end"><button type="button" class="btn2" onclick="v16CloseCrop()">Cancel</button><button type="button" class="btn" onclick="v16ApplyCrop()">✓ Use This Icon</button></div></div></div>`;
+}
+function v16ChangeCropPage(id){if(!atlasSource(id))return;v16Crop.page=id;v16Crop.x=.35;v16Crop.y=.35;let img=document.getElementById('v16CropSheet');if(img)img.src=atlasSource(id);v16UpdateCrop();}
+function v16UpdateCrop(){if(!v16Crop)return;let c=v16Crop;c.size=Math.min(.24,Math.max(.05,c.size));c.x=Math.max(0,Math.min(1-c.size,c.x));c.y=Math.max(0,Math.min(1-c.size,c.y));let b=document.getElementById('v16CropBox');if(b){b.style.left=c.x*100+'%';b.style.top=c.y*100+'%';b.style.width=c.size*100+'%';b.style.height=c.size*100+'%'}let p=document.getElementById('v16CropPreview');if(p)p.innerHTML=atlasIconHtml(c);let l=document.getElementById('v16CropSizeLabel');if(l)l.textContent=(c.size*100).toFixed(1)+'%';}
+function v16ResizeCrop(val){if(!v16Crop)return;let old=v16Crop.size,centerX=v16Crop.x+old/2,centerY=v16Crop.y+old/2;v16Crop.size=Number(val)/100;v16Crop.x=centerX-v16Crop.size/2;v16Crop.y=centerY-v16Crop.size/2;v16UpdateCrop();}
+function v16MoveCrop(e){let stage=document.getElementById('v16CropStage');if(!stage||!v16Crop)return;let r=stage.getBoundingClientRect();if(!r.width||!r.height)return;v16Crop.x=(e.clientX-r.left)/r.width-v16Crop.size/2;v16Crop.y=(e.clientY-r.top)/r.height-v16Crop.size/2;v16UpdateCrop();}
+function v16PointerDown(e){if(e.button!==0&&e.pointerType==='mouse')return;v16Pointer=e.pointerId;e.currentTarget.setPointerCapture?.(e.pointerId);v16MoveCrop(e);e.preventDefault();}
+function v16PointerMove(e){if(v16Pointer===e.pointerId)v16MoveCrop(e)}
+function v16PointerUp(e){if(v16Pointer===e.pointerId){v16MoveCrop(e);v16Pointer=null}}
+function v16CloseCrop(){document.getElementById('v16CropPicker')?.remove();v16Crop=null;v16Pointer=null;v15IconTarget=null;}
+function v16ApplyCrop(){if(!v16Crop)return;let ref={...v16Crop};if(v16Target==='task'){pendingAtlas=ref;let preview=document.getElementById('taskIconLivePreview');if(preview)preview.innerHTML=atlasIconHtml(ref);let text=document.getElementById('atlasChoicePreview');if(text)text.textContent='Custom crop selected. Save the task to apply.';}
+ else if(v16Target==='coupon'){v16CouponDraft??={};v16CouponDraft.atlas=ref;let preview=document.getElementById('v16CouponIconPreview');if(preview)preview.innerHTML=atlasIconHtml(ref);}
+ else if(v16Target==='goal'){v15GoalDraft.icon=ref;}
+ else if(v16Target==='milestone'&&v15GoalDraft?.milestones?.[v15IconTarget?.index]){v15GoalDraft.milestones[v15IconTarget.index].icon=ref;}
+ let refresh=v16Target==='goal'||v16Target==='milestone';v16CloseCrop();if(refresh)v15RefreshEditor();else notify('Icon crop selected. Save to apply.');}
+openAtlasPicker=function(){v16OpenCrop('task')};
+v15ChooseIcon=function(target,index=-1){v16OpenCrop(target,index)};
+// The atlas page is now displayed as a single original image without misaligned grid overlays.
+const v16OldAtlasView=atlasView;
+atlasView=function(){let out=v16OldAtlasView();let pg=data.atlasPages.find(p=>p.id===atlasPickerPage)||data.atlasPages[0];return out.replace(/<div class="atlas-grid"[\s\S]*?<\/div>/,`<div style="max-width:700px;margin:auto"><img src="${atlasSource(pg.id)}" alt="${safe(pg.name)}" style="display:block;width:100%;border:1px solid #6c5187;border-radius:8px"></div>`).replace('100 selectable icons per page.','Adjustable square crop selections from each sheet.').replace('New sheets must be square and contain 10 evenly spaced rows and columns.','New sheets should be square; precise 10×10 alignment is no longer required.');};
+// Coupon editor with reusable atlas artwork and one-time purchase option.
+const v16OldOpenModal=openModal;
+openModal=function(type,id=''){if(type==='reward'){if(!isAdmin())return notify('Admin only');let r=data.rewards.find(x=>x.id===id);v16CouponDraft={atlas:r?.atlas?{...r.atlas}:null};modal='v16Coupon|'+id;render();return;}v16OldOpenModal(type,id)};
+const v16OldModalView=modalView;
+modalView=function(){if(!modal.startsWith('v16Coupon|'))return v16OldModalView();let id=modal.split('|')[1],r=data.rewards.find(x=>x.id===id)||{};return `<div class="modalback" onclick="if(event.target===this)closeModal()"><div class="modal" style="width:min(660px,100%)"><div class="row between"><h2>${id?'Edit Coupon':'Create Coupon'}</h2><button class="iconbtn" onclick="closeModal()">✕</button></div><form onsubmit="v16SaveCoupon(event,'${safe(id)}')"><div class="field"><label>Coupon name</label><input name="name" required maxlength="80" value="${safe(r.name||'')}"></div><div class="field"><label>Description</label><textarea name="description" maxlength="1000">${safe(r.description||'')}</textarea></div><div class="formGrid"><div class="field"><label>Price in gold</label><input name="price" type="number" min="1" max="1000000" required value="${Number(r.price||100)}"></div><div class="field"><label>Provider</label><select name="provider">${[['matthew','Matthew'],['beth','Beth'],['either','Either']].map(([v,n])=>`<option value="${v}" ${r.provider===v?'selected':''}>${n}</option>`).join('')}</select></div></div><div class="field"><label>Coupon icon</label><div class="coupon-icon-picker"><div id="v16CouponIconPreview" class="reward-icon" style="width:54px;height:54px;font-size:32px">${v16CouponDraft?.atlas?atlasIconHtml(v16CouponDraft.atlas):safe(r.emoji||'🎁')}</div><button class="btn2" type="button" onclick="v16OpenCrop('coupon')">▦ Choose Atlas Icon</button></div></div><div class="field"><label><input type="checkbox" name="oneTime" style="width:auto" ${r.oneTime?'checked':''}> Special one-time purchase per player</label><div class="tiny muted">A player can purchase this coupon only once ever, even after redemption. Purchase history remains intact.</div></div><div class="actions"><button type="button" class="btn2" onclick="closeModal()">Cancel</button><button class="btn" type="submit">Save Coupon</button></div></form></div></div>`};
+function v16SaveCoupon(e,id){e.preventDefault();if(!isAdmin())return;let f=new FormData(e.target),name=String(f.get('name')||'').trim(),price=Number(f.get('price')),provider=String(f.get('provider'));if(!name||!Number.isInteger(price)||price<1||price>1000000||!['matthew','beth','either'].includes(provider))return notify('Check coupon name, price and provider');let r=data.rewards.find(x=>x.id===id);if(!r){r={id:uid(),emoji:'🎁'};data.rewards.push(r)}Object.assign(r,{name,description:String(f.get('description')||'').trim(),price,provider,oneTime:f.has('oneTime'),atlas:v16CouponDraft?.atlas||null});event('coupon saved',name);v16CouponDraft=null;modal='';save();render();notify('Coupon saved with icon and purchase settings')}
+const v16OldRewardsView=rewardsView;
+rewardsView=function(){let out=v16OldRewardsView();for(let r of data.rewards.filter(x=>!x.archived)){
+ const old=`<div class="reward-icon" style="width:52px;height:52px;font-size:36px">${r.art?photoHtml(r.art,'taskArt'):safe(r.emoji||'🎁')}</div>`;
+ if(r.atlas)out=out.replace(old,`<div class="reward-icon" style="width:52px;height:52px;font-size:36px">${atlasIconHtml(r.atlas)}</div>`);
+ if(isAdmin())out=out.replace(`<button class="btn2 tiny" onclick="removeCoupon('${r.id}')">✕ Delete Coupon</button>`,`<button class="btn2 tiny" onclick="openModal('reward','${r.id}')">✎ Edit</button><button class="btn2 tiny" onclick="removeCoupon('${r.id}')">✕ Delete Coupon</button>`);
+ }return out;};
+// Keep image pages referenced by rewards and goals safe from accidental deletion.
+const v16OldDeleteAtlas=deleteAtlas;
+deleteAtlas=async function(id){if(data.rewards.some(r=>r.atlas?.page===id)||data.goals.some(g=>g.icon?.page===id||g.milestones?.some(m=>m.icon?.page===id)))return notify('This atlas is in use by a coupon or goal. Reassign those icons first.');return v16OldDeleteAtlas(id)};
+// Version display on desktop and in About.
+const v16OldRender=render;
+render=function(){v16OldRender();document.querySelectorAll('.sidefoot').forEach(el=>el.innerHTML=el.innerHTML.replace(/V1\.5\.0/g,'V1.6.0'));};
+const v16OldSettingsView=settingsView;
+settingsView=function(){return v16OldSettingsView().replace(/V1\.5\.0/g,'V1.6.0')+`<section class="card section"><h2>What's New • V1.6.0</h2><p class="muted tiny">Drag-and-resize atlas icon crops, accurate previews, reusable crop picker for tasks and goal milestones, coupon icon selection and editing, special one-time coupon purchase limits.</p></section>`};
+// Ensure the new renderer is used immediately on initial load.
+render();
 </script></body></html>
