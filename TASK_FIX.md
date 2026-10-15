@@ -1,0 +1,1 @@
+Our Quest V2.0.2 task editor hotfix. Replaces missing cloud arrays, including categories, with safe defaults. Replaces all hosted files, preserves existing Supabase config and data. Back up before upgrading. This does not fix other unverified features or implement the planned V2.1 changes.
