@@ -16,6 +16,13 @@
 .crop-slider{width:100%;accent-color:#f3ca74}
 .coupon-icon-picker{display:flex;align-items:center;gap:10px}
 .coupon-icon-picker .reward-icon{width:48px;height:48px}
+
+/* V2.0.3: mobile-safe XP dock and reliable atlas modal stacking */
+.oq-xp-sticky{position:fixed!important;top:auto!important;bottom:12px!important;left:max(12px,calc((100vw - 1000px)/2))!important;right:max(12px,calc((100vw - 1000px)/2))!important;z-index:35!important;margin:0!important;max-width:1000px;box-shadow:0 8px 30px #000b!important}
+.app main{padding-bottom:110px!important}
+.modalback{z-index:1000!important}
+body:has(.modalback) .oq-xp-sticky,body:has(#v16CropPicker) .oq-xp-sticky,body:has(.oq-login-screen) .oq-xp-sticky{display:none!important}
+@media(max-width:700px){.oq-xp-sticky{bottom:calc(70px + env(safe-area-inset-bottom,0px))!important;left:8px!important;right:8px!important;padding:7px 10px!important}.app main{padding-bottom:calc(155px + env(safe-area-inset-bottom,0px))!important}.modalback{padding:calc(12px + env(safe-area-inset-top,0px)) 9px calc(12px + env(safe-area-inset-bottom,0px))!important}.modalback .modal{max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))!important}}
 </style><style>
 .atlas-grid{gap:0!important;max-width:700px!important;border:1px solid #6c5187;border-radius:8px;overflow:hidden}
 .atlas-cell{border:1px solid #655079!important;border-radius:0!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
@@ -551,6 +558,8 @@ function oqError(s){let e=document.getElementById('oq-auth-error');if(e)e.textCo
 function oqNormalize(payload){
  const x=(payload&&typeof payload==='object'&&!Array.isArray(payload))?structuredClone(payload):{};
  const defaults=seed();
+ if(!Array.isArray(x.atlasPages))x.atlasPages=structuredClone(defaults.atlasPages||[]);
+ for(const pg of (defaults.atlasPages||[])){if(pg.builtin&&!x.atlasPages.some(a=>a.id===pg.id))x.atlasPages.push(structuredClone(pg));}
  for(const field of ['players','tasks','logs','quests','categories','ledger','champions','achievements','rewards','purchases','messages','goals','events','xpRequests','photoLibrary']){
    if(!Array.isArray(x[field]))x[field]=defaults[field]||[];
  }
