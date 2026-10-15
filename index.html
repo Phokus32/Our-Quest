@@ -8,12 +8,32 @@
 </style><style>
 .atlas-grid{gap:0!important;max-width:700px!important;border:1px solid #6c5187;border-radius:8px;overflow:hidden}
 .atlas-cell{border:1px solid #655079!important;border-radius:0!important;min-width:0!important;overflow:hidden!important;box-sizing:border-box!important}
-.atlas-icon{width:100%!important;height:100%!important;position:absolute!important;inset:0!important;aspect-ratio:auto!important;background-size:1000% 1000%!important}
+.atlas-grid .atlas-cell .atlas-icon{width:100%!important;height:100%!important;position:absolute!important;inset:0!important;aspect-ratio:auto!important;background-size:1000% 1000%!important}
 .atlas-cell.chosen{z-index:2;outline:3px solid #f5c77d!important;outline-offset:-3px!important}
 .icon-live-preview{width:62px;height:62px;border:1px solid #9d75ba;border-radius:10px;background:#302143;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:30px}
 .icon-live-preview .atlas-icon{position:relative!important;inset:auto!important;width:100%!important;height:100%!important}
 .goal-milestone{padding:10px;border:1px solid #5a4470;border-radius:10px;margin-top:9px}
 .back-nav{margin-bottom:12px}
+
+/* V1.5: icon clipping in every thumbnail context. Previously an absolute atlas span
+   escaped .taskIcon and expanded over the whole page. */
+.taskIcon,.icon-live-preview,.weight-goal-icon,.milestone-icon,.reward-icon {position:relative!important;isolation:isolate;overflow:hidden!important;flex-shrink:0}
+.taskIcon .atlas-icon,.icon-live-preview .atlas-icon,.weight-goal-icon .atlas-icon,.milestone-icon .atlas-icon,.reward-icon .atlas-icon{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:100%!important;aspect-ratio:1!important;max-width:100%!important;max-height:100%!important;background-size:1000% 1000%!important;transform:none!important}
+.taskIcon img,.weight-goal-icon img,.milestone-icon img{display:block;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important}
+.task .taskIcon{width:44px!important;height:44px!important;min-width:44px!important;max-width:44px!important;max-height:44px!important}
+.task{position:relative;overflow:hidden;min-width:0}
+.task .taskIcon > *{max-width:100%;max-height:100%}
+.weight-goal-icon{width:62px;height:62px;border-radius:12px;background:#352548;display:grid;place-items:center;font-size:30px}
+.milestone-icon{width:44px;height:44px;border-radius:9px;background:#352548;display:grid;place-items:center;font-size:24px}
+.weight-goal-card{min-width:0}
+.weight-milestone-row{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:12px;margin:9px 0}
+.weight-milestone-row .details{flex:1;min-width:0}
+.weight-editor-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.weight-editor-milestone{border:1px solid var(--line);padding:12px;border-radius:12px;margin:9px 0;background:#281b3b}
+.weight-editor-milestone .field{margin:8px 0}
+.goal-icon-picker-button{display:flex;align-items:center;gap:10px;min-height:54px}
+.coupon-manage{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:550px){.weight-editor-row{grid-template-columns:1fr}}
 </style></head><body><div id="root"></div><script>
 'use strict';
 const KEY='ourquest-stage1-data-v1';const today=()=>localDate(new Date());const localDate=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const num=x=>Number(x||0).toLocaleString();const seed=()=>({players:[{id:'matthew',name:'Matthew',icon:'🛡️',xp:0,coins:0},{id:'beth',name:'Beth',icon:'✨',xp:0,coins:0}],current:'matthew',tasks:[{id:uid(),name:'Tidy the kitchen',emoji:'🧹',category:'Home',xp:25,difficulty:'Easy',repeat:true,frequency:'daily',maxPerPeriod:1,owner:'shared'},{id:uid(),name:'Take a walk',emoji:'🌿',category:'Wellness',xp:35,difficulty:'Normal',repeat:true,frequency:'daily',maxPerPeriod:1,owner:'shared'},{id:uid(),name:'Plan a date night',emoji:'💖',category:'Together',xp:60,difficulty:'Hard',repeat:false,frequency:'once',maxPerPeriod:1,owner:'shared'}],logs:[],quests:[],categories:[{name:'Home',emoji:'🏠',frequency:'daily'},{name:'Wellness',emoji:'🌿',frequency:'daily'},{name:'Together',emoji:'💖',frequency:'monthly'}],ledger:[],champions:[],achievements:[],rewards:[{id:uid(),name:'Choose our next movie',emoji:'🎬',price:60,provider:'either',description:'You pick what we watch.'},{id:uid(),name:'Coffee treat',emoji:'☕',price:100,provider:'either',description:'A special coffee run.'},{id:uid(),name:'Dinner at Olive Garden',emoji:'🍝',price:1000,provider:'matthew',description:'Dinner at Olive Garden, subject to provider approval and scheduling.'}],purchases:[],messages:[],goals:[],settings:{coinRate:10,xpCap:500,backdate:7,dailyBonusXP:50,dailyBonusCoins:25,weeklyBonusXP:125,monthlyBonusXP:400,reduceMotion:false},events:[]});let data;try{data=JSON.parse(localStorage.getItem(KEY))||seed()}catch{data=seed()}const save=()=>localStorage.setItem(KEY,JSON.stringify(data));function migrate(){data.settings??={coinRate:10,xpCap:500,backdate:7};data.categories??=[{name:'Home',emoji:'🏠',frequency:'daily'},{name:'Wellness',emoji:'🌿',frequency:'daily'},{name:'Together',emoji:'💖',frequency:'monthly'}];data.ledger??=[];data.champions??=[];data.achievements??=[];data.settings.dailyBonusXP??=50;data.settings.dailyBonusCoins??=25;data.settings.weeklyBonusXP??=125;data.settings.monthlyBonusXP??=400;data.tasks.forEach(t=>{t.frequency??=(t.repeat?'daily':'once');t.maxPerPeriod??=1});data.quests.forEach(q=>{q.maxPerDay??=1;q.completedCount??=(q.status==='approved'?1:0);q.awarded??=(q.status==='approved');q.history??=[]});data.purchases.forEach(p=>{if(p.status==='used')p.status='fulfilled';p.history??=[]});if(!data.rewards.some(r=>r.name==='Dinner at Olive Garden'))data.rewards.push({id:uid(),name:'Dinner at Olive Garden',emoji:'🍝',price:1000,provider:'matthew',description:'Dinner at Olive Garden, subject to provider approval and scheduling.'});}migrate();save();let page='home',filter='All',modal='',toastTimer;const me=()=>data.players.find(p=>p.id===data.current);const other=()=>data.players.find(p=>p.id!==data.current);const totalXp=p=>p.xp;const level=p=>Math.floor(Math.sqrt(p.xp/100))+1;const levelBase=n=>100*(n-1)**2;const levelNext=p=>levelBase(level(p)+1);const levelPercent=p=>Math.max(0,Math.min(100,100*(p.xp-levelBase(level(p)))/(levelNext(p)-levelBase(level(p)))));const event=(type,detail)=>data.events.unshift({id:uid(),type,detail,actor:me().name,at:new Date().toISOString()});const notify=s=>{document.querySelector('.toast')?.remove();let n=document.createElement('div');n.className='toast';n.textContent=s;document.body.appendChild(n);clearTimeout(toastTimer);toastTimer=setTimeout(()=>n.remove(),3000)};const isAdmin=()=>data.current==='matthew';
@@ -31,7 +51,7 @@ const dailyXP=(player,date)=>data.ledger.filter(t=>t.player===player&&t.kind==='
 function periodKey(date,kind){return datePeriod(date,kind)}
 function settleChampions(){let now=new Date();for(let offset=1;offset<=35;offset++){let d=new Date(now);d.setDate(d.getDate()-offset);let date=localDate(d);for(let kind of ['daily','weekly','monthly']){if(kind==='weekly'&&d.getDay()!==0)continue;if(kind==='monthly'&&new Date(d.getFullYear(),d.getMonth()+1,0).getDate()!==d.getDate())continue;let key=periodKey(date,kind);if(data.champions.some(c=>c.kind===kind&&c.key===key))continue;let from=kind==='daily'?date:kind==='weekly'?periodKey(date,'weekly'):date.slice(0,7)+'-01';let scores=data.players.map(p=>({id:p.id,xp:data.ledger.filter(t=>t.player===p.id&&t.kind==='xp'&&t.amount>0&&t.source!=='champion'&&t.at.slice(0,10)>=from&&t.at.slice(0,10)<=date).reduce((a,t)=>a+t.amount,0)}));let max=Math.max(...scores.map(x=>x.xp));let winners=max>0?scores.filter(x=>x.xp===max).map(x=>x.id):[];data.champions.push({id:uid(),kind,key,date,winners,scores});if(winners.length){let bonus=Number(data.settings[kind+'BonusXP']||0),coins=kind==='daily'?Number(data.settings.dailyBonusCoins||0):0;winners.forEach(id=>{if(bonus)credit(id,bonus,'champion',kind+' winner '+key);if(coins){data.players.find(p=>p.id===id).coins+=coins;transaction(id,'gold',coins,'champion',kind+' winner '+key)}})}}}save()}
 function award(xp){credit(data.current,xp,'task','Task completion')}
-function nav(to){page=to;filter='All';render();window.scrollTo(0,0)}function taskVisible(t){return t.owner==='shared'||t.owner===data.current}function render(){const titles={home:'Your Adventure',tasks:'Quest Journal',quests:'Quest Board',rewards:'Treasure Shop',messages:'Messages',stats:'Adventure Chronicle',goals:'Long-Term Goals',settings:'Settings & Admin',approvals:'Approval Inbox',more:'More Adventures',requests:'XP Requests',photos:'Photo Library',atlas:'Icon Atlas Library'};const tabs=[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Rewards'],['messages','✉','Messages'],['stats','◫','Stats'],['goals','◈','Goals'],['approvals','✓','Approvals'],['settings','⚙','Settings']];document.getElementById('root').innerHTML=`<div class="app"><aside class="side"><div class="brand"><img src="assets/our-quest-icon.png"><div><b>Our Quest</b><small>A SHARED ADVENTURE</small></div></div><nav class="nav">${tabs.map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav><div class="sidefoot">✦ V1.4.0 local preview<br>Local demonstration mode<br><br>Data is saved on this device only. Cloud syncing is not connected.</div></aside><main><header class="top"><div><div class="eyebrow">✧ OUR QUEST · ${safe(new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}))}</div><h1>${titles[page]||'Our Quest'}</h1></div><div class="topright"><span class="chip">🪙 ${num(me().coins)}</span><select class="selectSmall" aria-label="Active demo profile" onchange="switchPlayer(this.value)">${data.players.map(p=>`<option value="${p.id}" ${p.id===data.current?'selected':''}>${p.icon} ${safe(p.name)}</option>`).join('')}</select></div></header><div class="notice">Preview mode: Switching players simulates two accounts on this browser. It is not secure authentication or cross-phone synchronization.</div>${({home:homeView,tasks:tasksView,quests:questsView,rewards:rewardsView,messages:messagesView,stats:statsView,goals:goalsView,settings:settingsView,approvals:approvalsView,more:moreView,requests:requestXPView,photos:photosView,atlas:atlasView}[page]||homeView)()}</main><nav class="bottom">${[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Shop'],['more','☷','More']].map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav></div>${modal?modalView():''}`}
+function nav(to){page=to;filter='All';render();window.scrollTo(0,0)}function taskVisible(t){return t.owner==='shared'||t.owner===data.current}function render(){const titles={home:'Your Adventure',tasks:'Quest Journal',quests:'Quest Board',rewards:'Treasure Shop',messages:'Messages',stats:'Adventure Chronicle',goals:'Long-Term Goals',settings:'Settings & Admin',approvals:'Approval Inbox',more:'More Adventures',requests:'XP Requests',photos:'Photo Library',atlas:'Icon Atlas Library'};const tabs=[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Rewards'],['messages','✉','Messages'],['stats','◫','Stats'],['goals','◈','Goals'],['approvals','✓','Approvals'],['settings','⚙','Settings']];document.getElementById('root').innerHTML=`<div class="app"><aside class="side"><div class="brand"><img src="assets/our-quest-icon.png"><div><b>Our Quest</b><small>A SHARED ADVENTURE</small></div></div><nav class="nav">${tabs.map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav><div class="sidefoot">✦ V1.5.0 local preview<br>Local demonstration mode<br><br>Data is saved on this device only. Cloud syncing is not connected.</div></aside><main><header class="top"><div><div class="eyebrow">✧ OUR QUEST · ${safe(new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}))}</div><h1>${titles[page]||'Our Quest'}</h1></div><div class="topright"><span class="chip">🪙 ${num(me().coins)}</span><select class="selectSmall" aria-label="Active demo profile" onchange="switchPlayer(this.value)">${data.players.map(p=>`<option value="${p.id}" ${p.id===data.current?'selected':''}>${p.icon} ${safe(p.name)}</option>`).join('')}</select></div></header><div class="notice">Preview mode: Switching players simulates two accounts on this browser. It is not secure authentication or cross-phone synchronization.</div>${({home:homeView,tasks:tasksView,quests:questsView,rewards:rewardsView,messages:messagesView,stats:statsView,goals:goalsView,settings:settingsView,approvals:approvalsView,more:moreView,requests:requestXPView,photos:photosView,atlas:atlasView}[page]||homeView)()}</main><nav class="bottom">${[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Shop'],['more','☷','More']].map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav></div>${modal?modalView():''}`}
 function homeView(){const p=me(),logs=data.logs.filter(l=>l.player===p.id&&l.date===today()&&!l.undone);return `<div class="hero"><div class="card heroMain"><div class="eyebrow">WELCOME BACK, ${safe(p.name.toUpperCase())}</div><div class="heroTitle">Level ${level(p)} ${rankName(level(p))}</div><div class="heroSub">Every little victory is part of your story. Your next chapter starts today.</div><div class="row between" style="margin-top:20px"><span class="tiny">✦ ${num(p.xp)} XP</span><span class="tiny">${num(levelNext(p)-p.xp)} to next level</span></div><div class="bar"><i style="width:${levelPercent(p)}%"></i></div><button class="btn" style="margin-top:14px" onclick="nav('tasks')">✦ Log an Activity</button></div><div class="heroAside"><div class="card"><div class="statLabel">Today's completions</div><div class="stat">${logs.length}</div><span class="green tiny">✦ +${num(logs.reduce((s,l)=>s+l.xp,0))} XP today</span></div><div class="card"><div class="statLabel">Gold coins</div><div class="stat">${num(p.coins)}</div><span class="muted tiny">Spend in Treasure Shop</span></div><div class="card"><div class="statLabel">Active quests</div><div class="stat">${data.quests.filter(q=>q.to===p.id&&q.status==='accepted').length}</div><span class="muted tiny">Adventures awaiting you</span></div><div class="card"><div class="statLabel">Partner's level</div><div class="stat">${level(other())}</div><span class="muted tiny">${safe(other().name)} · ${num(other().xp)} XP</span></div></div></div><div class="grid two"><section class="card"><div class="row between"><h2>✧ Quick Log</h2><button class="btn2 tiny" onclick="nav('tasks')">All Tasks →</button></div>${data.tasks.filter(taskVisible).slice(0,5).map(taskLine).join('')||'<div class="empty">Create your first task.</div>'}</section><section class="card"><div class="row between"><h2>⚔ Your Quest Board</h2><button class="btn2 tiny" onclick="nav('quests')">View Quests →</button></div>${data.quests.filter(q=>q.to===p.id&&q.status!=='approved'&&q.status!=='declined').slice(0,4).map(questLine).join('')||'<div class="empty">No quests yet. Send your partner an adventure!</div>'}<hr class="divider"><h3>✉ Latest Message</h3><p class="muted tiny">${data.messages.length?safe(data.messages.at(-1).text):'Your shared story is waiting to be written.'}</p></section></div><section class="section card"><div class="row between"><h2>Recent Achievements</h2><button class="btn2 tiny" onclick="nav('stats')">View History →</button></div><div class="grid">${[['🌟','First Steps',p.xp>0],['⚔️','Getting Started',data.logs.filter(l=>l.player===p.id).length>=5],['👑','Rising Hero',level(p)>=3]].map(([i,n,ok])=>`<div class="card" style="text-align:center;opacity:${ok?1:.45}"><div style="font-size:31px">${i}</div><b>${n}</b><div class="tiny muted">${ok?'Unlocked':'Locked'}</div></div>`).join('')}</div></section>`}
 function taskLine(t){let count=countTask(t),max=maxTask(t),done=count>=max,available=taskAvailable(t);return `<div class="task" style="opacity:${done||!available?'.55':'1'}"><div class="taskIcon">${t.emoji?.startsWith('data:')?`<img src="${t.emoji}">`:safe(t.emoji||'✨')}</div><div style="flex:1;min-width:0"><div class="taskName">${safe(t.name)}</div><div class="tiny muted">${safe(t.category)} · ${safe(t.frequency||'daily')} · <span class="gold">+${t.xp} XP</span> · ${count}/${max} completed</div>${done?'<span class="tag">✓ Complete until next reset</span>':!available?'<span class="tag">Outside availability window</span>':''}</div><button class="iconbtn" onclick="logTask('${t.id}')" ${done||!available?'disabled':''}>${done?'✓':'+ XP'}</button></div>`}
 function tasksView(){let cats=['All',...new Set(data.tasks.filter(taskVisible).map(t=>t.category))],list=data.tasks.filter(t=>taskVisible(t)&&(filter==='All'||t.category===filter));return `<div class="row between wrap"><p class="muted">Recurring activities reset by schedule. Completed tasks lock until their next period.</p>${isAdmin()?`<div class="row wrap"><button class="btn2" onclick="openModal('category')">⚙ Categories</button><button class="btn" onclick="openModal('task')">＋ Create Task</button></div>`:''}</div><div class="tabs">${cats.map(c=>`<button class="${filter===c?'active':''}" onclick="setFilter('${safe(c)}')">${safe(c)}</button>`).join('')}</div><section class="card">${list.map(t=>`<div class="row between" style="gap:5px"><div style="flex:1;min-width:0">${taskLine(t)}</div>${isAdmin()?`<button class="iconbtn" title="Edit task" onclick="openModal('editTask','${t.id}')">✎</button>`:''}</div>`).join('')||'<div class="empty">No tasks in this category.</div>'}</section>${isAdmin()?`<div class="card section"><h2>Bulk Task Tools</h2><button class="btn2" onclick="duplicateTaskPrompt()">Duplicate a task</button> <button class="btn2" onclick="bulkSchedule()">Change category schedule</button></div>`:''}`}
@@ -171,7 +191,7 @@ function claimDailyLogin(){let key=data.current+':'+today();if(data.loginClaims.
 const v13HomeView=homeView;
 homeView=function(){let claimed=data.loginClaims.includes(data.current+':'+today());return `<div class="bonus-strip row between wrap"><div><b>✦ Daily Login Reward</b><div class="tiny muted">${claimed?'Claimed today. Return tomorrow for another bonus.':`Claim +${data.settings.loginXP} XP and +${data.settings.loginCoins} gold today.`}</div></div><button class="btn" onclick="claimDailyLogin()" ${claimed?'disabled':''}>${claimed?'✓ Claimed':'Claim Reward'}</button></div>`+v13HomeView()};
 const v13SettingsView=settingsView;
-settingsView=function(){let out=v13SettingsView().replaceAll('About V1.2.0','About V1.4.0');if(isAdmin())out+=`<div class="card section"><h2>Daily Login Reward Settings</h2><div class="formGrid"><div class="field"><label>Daily login XP</label><input id="loginXP" type="number" min="0" max="10000" value="${data.settings.loginXP}"></div><div class="field"><label>Daily login gold</label><input id="loginCoins" type="number" min="0" max="10000" value="${data.settings.loginCoins}"></div></div><button class="btn" onclick="saveLoginSettings()">Save Login Rewards</button></div>`;return out};
+settingsView=function(){let out=v13SettingsView().replaceAll('About V1.2.0','About V1.5.0');if(isAdmin())out+=`<div class="card section"><h2>Daily Login Reward Settings</h2><div class="formGrid"><div class="field"><label>Daily login XP</label><input id="loginXP" type="number" min="0" max="10000" value="${data.settings.loginXP}"></div><div class="field"><label>Daily login gold</label><input id="loginCoins" type="number" min="0" max="10000" value="${data.settings.loginCoins}"></div></div><button class="btn" onclick="saveLoginSettings()">Save Login Rewards</button></div>`;return out};
 function saveLoginSettings(){if(!isAdmin())return;let xp=Number(document.getElementById('loginXP').value),gold=Number(document.getElementById('loginCoins').value);if(!Number.isInteger(xp)||!Number.isInteger(gold)||xp<0||gold<0||xp>10000||gold>10000)return notify('Enter valid bonus values');data.settings.loginXP=xp;data.settings.loginCoins=gold;save();render();notify('Daily login settings saved')}
 // Weight-based goals are optional and explicitly controlled by the goal owner.
 const v13ModalView=modalView;
@@ -246,8 +266,130 @@ function editWeightMilestone(id,mid){let g=data.goals.find(x=>x.id===id),m=g?.mi
 const v14Render=render;
 render=function(){v14Render();if(page!=='home'){let main=document.querySelector('main'),header=main?.querySelector('.top');if(main&&header)header.insertAdjacentHTML('afterend',`<div class="back-nav"><button class="btn2 tiny" onclick="nav('home')">← Back to Overview</button></div>`)}}
 const v14SettingsView=settingsView;
-settingsView=function(){return v14SettingsView().replaceAll('V1.3.0','V1.4.0')+`<div class="card section"><h2>What's New • V1.4.0</h2><p class="muted tiny">Three built-in 100-icon atlas sheets, improved icon preview, daily/weekly/monthly/annual task frequency, consecutive-day and repeat bonuses, separate weight goals and milestones, one-time coupons and more Back buttons.</p></div>`};
+settingsView=function(){return v14SettingsView().replaceAll('V1.3.0','V1.5.0')+`<div class="card section"><h2>What's New • V1.5.0</h2><p class="muted tiny">Three built-in 100-icon atlas sheets, improved icon preview, daily/weekly/monthly/annual task frequency, consecutive-day and repeat bonuses, separate weight goals and milestones, one-time coupons and more Back buttons.</p></div>`};
 save();
 
 settleChampions();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});render();
+
+/* Our Quest V1.5.0: corrected atlas clipping, goal editor and coupon management */
+function v15Icon(ref,fallback='🎯') {return ref&&atlasSource(ref.page)?atlasIconHtml(ref):safe(fallback)}
+function v15IconBox(ref,fallback='🎯',cls='weight-goal-icon') {return `<div class="${cls}">${v15Icon(ref,fallback)}</div>`}
+function v15WeightProgress(g){let span=Number(g.startWeight)-Number(g.targetWeight);return span>0?Math.min(100,Math.max(0,(Number(g.startWeight)-Number(g.currentWeight))/span*100)):0}
+function v15GoalVisible(g){return g.owner==='shared'||g.owner===data.current||isAdmin()}
+// Store original reward names in purchase records when archiving/deleting a coupon.
+function removeCoupon(id){
+ if(!isAdmin())return notify('Only Matthew can manage coupons');
+ const r=data.rewards.find(x=>x.id===id);if(!r)return;
+ const used=data.purchases.some(p=>p.rewardId===id);
+ const message=used?`Remove "${r.name}" from the shop? Existing purchases and history will remain available.`:`Delete "${r.name}" from the shop?`;
+ if(!confirm(message))return;
+ if(used){r.archived=true;for(const purchase of data.purchases.filter(p=>p.rewardId===id)){purchase.rewardName??=r.name;}}
+ else data.rewards=data.rewards.filter(x=>x.id!==id);
+ event('coupon removed',r.name);save();render();notify(used?'Coupon archived; purchase history preserved':'Coupon deleted');
+}
+function restoreCoupon(id){if(!isAdmin())return;let r=data.rewards.find(x=>x.id===id);if(!r)return;r.archived=false;save();render();notify('Coupon restored to shop')}
+const v15OriginalRewardsView=rewardsView;
+rewardsView=function(){
+ let out=v15OriginalRewardsView();
+ // Render the shop directly to avoid modifying purchase-history markup.
+ const shop=`<div class="grid">${data.rewards.filter(r=>!r.archived).map(r=>{
+ let bought=r.oneTime&&data.purchases.some(p=>p.rewardId===r.id&&p.buyer===data.current);
+ return `<div class="card"><div class="reward-icon" style="width:52px;height:52px;font-size:36px">${r.art?photoHtml(r.art,'taskArt'):safe(r.emoji||'🎁')}</div><h2 style="margin-top:10px">${safe(r.name)}</h2><p class="muted tiny" style="min-height:35px">${safe(r.description||'')}</p><div class="row between"><b class="gold">🪙 ${num(r.price)}</b><button class="btn" onclick="buyReward('${r.id}')" ${me().coins<r.price||bought?'disabled':''}>${bought?'Purchased':'Purchase'}</button></div>${isAdmin()?`<div class="coupon-manage"><button class="btn2 tiny" onclick="removeCoupon('${r.id}')">✕ Delete Coupon</button></div>`:''}</div>`
+ }).join('')||'<div class="empty">No coupons available.</div>'}</div>`;
+ const start=out.indexOf('<div class="grid">'),end=out.indexOf('<section class="card section">',start);
+ if(start!==-1&&end!==-1)out=out.slice(0,start)+shop+out.slice(end);
+ if(isAdmin()&&data.rewards.some(r=>r.archived))out+=`<section class="card section"><h2>Archived Coupon Options</h2>${data.rewards.filter(r=>r.archived).map(r=>`<div class="listline row between"><span>${safe(r.name)}</span><button class="btn2" onclick="restoreCoupon('${r.id}')">Restore to Shop</button></div>`).join('')}</section>`;
+ return out;
+};
+// A goal draft is edited in memory until the administrator presses Save.
+let v15GoalDraft=null,v15IconTarget=null;
+function v15EditGoal(id){
+ if(!isAdmin())return notify('Only Matthew can edit goal definitions');
+ let g=data.goals.find(x=>x.id===id);if(!g)return;
+ v15GoalDraft=JSON.parse(JSON.stringify(g));v15GoalDraft.milestones??=[];
+ modal='v15WeightGoal|'+id;render();
+}
+function v15UpdateGoalDraft(field,value){if(!v15GoalDraft)return;v15GoalDraft[field]=value}
+function v15SyncDraftForm(){
+ if(!v15GoalDraft)return;
+ const form=document.querySelector('.modalback form');if(!form)return;
+ const f=new FormData(form);
+ v15GoalDraft.title=String(f.get('title')||'').trim();
+ v15GoalDraft.description=String(f.get('description')||'').trim();
+ v15GoalDraft.startWeight=Number(f.get('startWeight'));
+ v15GoalDraft.targetWeight=Number(f.get('targetWeight'));
+ v15GoalDraft.owner=String(f.get('owner')||v15GoalDraft.owner);
+ form.querySelectorAll('.weight-editor-milestone').forEach((row,i)=>{
+  if(!v15GoalDraft.milestones[i])return;
+  const w=row.querySelector('input[type=number]'),r=row.querySelector('input[maxlength="200"]');
+  if(w)v15GoalDraft.milestones[i].weight=Number(w.value);
+  if(r)v15GoalDraft.milestones[i].reward=r.value;
+ });
+}
+function v15AddMilestone(){if(!v15GoalDraft)return;v15SyncDraftForm();v15GoalDraft.milestones.push({id:uid(),weight:Number(v15GoalDraft.targetWeight)||160,reward:'',icon:null,completed:false});v15RefreshEditor()}
+function v15RemoveMilestone(i){v15SyncDraftForm();if(!v15GoalDraft||!confirm('Remove this milestone from the goal?'))return;v15GoalDraft.milestones.splice(i,1);v15RefreshEditor()}
+function v15SetMilestone(i,field,value){if(v15GoalDraft?.milestones?.[i])v15GoalDraft.milestones[i][field]=value}
+function v15RefreshEditor(){const old=document.querySelector('.modalback');if(old)old.outerHTML=v15WeightEditorHtml()}
+function v15ChooseIcon(target,index=-1){if(!v15GoalDraft)return;v15SyncDraftForm();v15IconTarget={target,index};atlasPickerPage=(target==='goal'?v15GoalDraft.icon:v15GoalDraft.milestones[index]?.icon)?.page||data.atlasPages[0].id;document.body.insertAdjacentHTML('beforeend',atlasPickerHtml())}
+const v15PreviousSelectAtlasIcon=selectAtlasIcon;
+selectAtlasIcon=function(id,cell){
+ if(v15IconTarget){
+  const ref={page:id,cell};
+  if(v15IconTarget.target==='goal')v15GoalDraft.icon=ref;
+  else if(v15GoalDraft.milestones[v15IconTarget.index])v15GoalDraft.milestones[v15IconTarget.index].icon=ref;
+  v15IconTarget=null;document.getElementById('atlasPicker')?.remove();v15RefreshEditor();return;
+ }
+ v15PreviousSelectAtlasIcon(id,cell);
+};
+const v15PreviousCloseAtlasPicker=closeAtlasPicker;
+closeAtlasPicker=function(){if(v15IconTarget){v15IconTarget=null;document.getElementById('atlasPicker')?.remove();return}v15PreviousCloseAtlasPicker()};
+function v15WeightEditorHtml(){
+ const g=v15GoalDraft;if(!g)return '';
+ return `<div class="modalback" onclick="if(event.target===this)closeModal()"><div class="modal" style="width:min(740px,100%)"><div class="row between"><h2>Edit Weight Goal</h2><button class="iconbtn" onclick="closeModal()">✕</button></div>
+ <form onsubmit="v15SaveGoal(event)"><div class="field"><label>Goal name</label><input name="title" required maxlength="120" value="${safe(g.title||'')}"></div>
+ <div class="field"><label>Description</label><textarea name="description" maxlength="1000">${safe(g.description||'')}</textarea></div>
+ <div class="field"><label>Goal icon</label><button type="button" class="btn2 goal-icon-picker-button" onclick="v15ChooseIcon('goal')">${v15IconBox(g.icon,'⚖️')} Choose Goal Icon</button></div>
+ <div class="weight-editor-row"><div class="field"><label>Starting weight (lb)</label><input name="startWeight" type="number" min="1" max="2000" step="0.1" value="${Number(g.startWeight)}" required></div><div class="field"><label>Final target (lb)</label><input name="targetWeight" type="number" min="1" max="2000" step="0.1" value="${Number(g.targetWeight)}" required></div></div>
+ <div class="field"><label>Goal owner</label><select name="owner"><option value="matthew" ${g.owner==='matthew'?'selected':''}>Matthew</option><option value="beth" ${g.owner==='beth'?'selected':''}>Beth</option></select></div>
+ <div class="row between wrap"><h3>Milestones (${g.milestones.length})</h3><button class="btn2" type="button" onclick="v15AddMilestone()">＋ Add Milestone</button></div>
+ ${g.milestones.map((m,i)=>`<div class="weight-editor-milestone"><div class="row between"><b>Milestone ${i+1}</b><button class="btn2 tiny" type="button" onclick="v15RemoveMilestone(${i})">Delete</button></div><div class="field"><label>Reward icon</label><button type="button" class="btn2 goal-icon-picker-button" onclick="v15ChooseIcon('milestone',${i})">${v15IconBox(m.icon,'🎁','milestone-icon')} Choose Reward Icon</button></div><div class="weight-editor-row"><div class="field"><label>Target weight (lb)</label><input type="number" min="1" max="2000" step="0.1" value="${Number(m.weight)}" onchange="v15SetMilestone(${i},'weight',this.value)"></div><div class="field"><label>Reward</label><input maxlength="200" value="${safe(m.reward||'')}" oninput="v15SetMilestone(${i},'reward',this.value)"></div></div></div>`).join('')}
+ <div class="row wrap" style="margin-top:15px"><button class="btn" type="submit">Save Goal and Milestones</button><button type="button" class="btn2" onclick="closeModal()">Cancel</button></div></form></div></div>`;
+}
+function v15SaveGoal(e){e.preventDefault();if(!isAdmin()||!v15GoalDraft)return;const f=new FormData(e.target),g=v15GoalDraft;
+ g.title=String(f.get('title')||'').trim();g.description=String(f.get('description')||'').trim();g.startWeight=Number(f.get('startWeight'));g.targetWeight=Number(f.get('targetWeight'));g.owner=String(f.get('owner'));
+ if(!g.title||!Number.isFinite(g.startWeight)||!Number.isFinite(g.targetWeight)||g.startWeight<=g.targetWeight||g.targetWeight<1)return notify('Check goal name and starting/target weights');
+ if(g.milestones.some(m=>!Number.isFinite(Number(m.weight))||Number(m.weight)<g.targetWeight||Number(m.weight)>g.startWeight))return notify('Milestones must fall between the starting and final weights');
+ if(new Set(g.milestones.map(m=>Number(m.weight))).size!==g.milestones.length)return notify('Milestones must have different target weights');
+ const index=data.goals.findIndex(x=>x.id===g.id);if(index<0)return;
+ const old=data.goals[index];g.currentWeight=old.currentWeight;g.weightHistory=old.weightHistory||[];
+ for(const m of g.milestones){m.weight=Number(m.weight);const oldMilestone=old.milestones?.find(x=>x.id===m.id);m.completed=Boolean(oldMilestone?.completed);m.rewardedAt=oldMilestone?.rewardedAt||null}
+ data.goals[index]=JSON.parse(JSON.stringify(g));v15GoalDraft=null;modal='';event('goal updated',g.title);save();render();notify('Goal and milestones saved');
+}
+const v15PreviousModalView=modalView;
+modalView=function(){if(modal.startsWith('v15WeightGoal|'))return v15WeightEditorHtml();return v15PreviousModalView()};
+const v15PreviousCloseModal=closeModal;
+closeModal=function(){v15GoalDraft=null;v15IconTarget=null;v15PreviousCloseModal()};
+const v15PreviousGoalsView=goalsView;
+goalsView=function(){
+ let regular=data.goals.filter(g=>g.goalType!=='weight'&&v15GoalVisible(g));
+ let weight=data.goals.filter(g=>g.goalType==='weight'&&v15GoalVisible(g));
+ let header=`<div class="row between wrap"><p class="muted">Personal goals and rewards. Matthew manages goals and milestone definitions.</p>${isAdmin()?`<button class="btn" onclick="openModal('goal')">＋ Create Goal</button>`:''}</div>`;
+ let normal=`<div class="grid two">${regular.map(g=>`<div class="card"><h2>${safe(g.title)}</h2><p class="muted">${safe(g.description||'')}</p><div class="bar"><i style="width:${g.target?Math.min(100,g.progress/g.target*100):0}%"></i></div><p class="tiny">${g.progress||0} / ${g.target||0}</p><button class="btn2" onclick="goalProgress('${g.id}')">＋ Progress</button></div>`).join('')}</div>`;
+ let weights=`<div class="grid two">${weight.map(g=>{let progress=v15WeightProgress(g);let ms=(g.milestones||[]).slice().sort((a,b)=>b.weight-a.weight);return `<div class="card weight-goal-card"><div class="row" style="gap:12px;align-items:center">${v15IconBox(g.icon,'⚖️')}<div style="flex:1;min-width:0"><h2>${safe(g.title)}</h2><p class="tiny muted">${safe(g.description||'')}</p></div></div><div class="row between" style="margin-top:14px"><b>${Number(g.currentWeight)} lb</b><b class="gold">Goal: ${Number(g.targetWeight)} lb</b></div><div class="bar" style="margin:10px 0"><i style="width:${progress}%"></i></div><p class="tiny muted">${progress.toFixed(1)}% completed · ${Math.max(0,Number(g.currentWeight)-Number(g.targetWeight)).toFixed(1)} lb remaining</p><h3 style="margin-top:18px">Milestone Rewards</h3>${ms.map(m=>`<div class="weight-milestone-row">${v15IconBox(m.icon,'🎁','milestone-icon')}<div class="details"><b>${Number(m.weight)} lb</b><div class="tiny muted">${safe(m.reward||'No reward specified')}</div></div><span class="tag">${Number(g.currentWeight)<=Number(m.weight)?'Reached':'Upcoming'}</span></div>`).join('')||'<p class="muted tiny">No milestones added yet.</p>'}<div class="row wrap" style="margin-top:15px"><button class="btn2" onclick="updateWeight('${g.id}')" ${g.owner!==data.current?'disabled title="Only the goal owner can record their weight"':''}>Update Weight</button>${isAdmin()?`<button class="btn" onclick="v15EditGoal('${g.id}')">✎ Edit Goal & Milestones</button>`:''}</div></div>`}).join('')}</div>`;
+ return header+weights+normal;
+};
+// Store milestone achievement once. Reaching the same weight again does not reissue it.
+const v15PreviousUpdateWeight=updateWeight;
+updateWeight=function(id){let g=data.goals.find(x=>x.id===id);if(!g)return;
+ const previously=(g.milestones||[]).map(m=>({id:m.id,completed:Boolean(m.completed)}));
+ v15PreviousUpdateWeight(id);
+ for(const m of g.milestones||[]){if(Number(g.currentWeight)<=Number(m.weight)&&!m.completed){m.completed=true;m.rewardedAt=new Date().toISOString();event('weight milestone reached',g.title+' • '+m.weight+' lb • '+(m.reward||'Milestone'));}}
+ save();render();
+};
+// Keep the task list contained even if a legacy custom icon is malformed.
+const v15PreviousTaskLine=taskLine;
+taskLine=function(t){let html=v15PreviousTaskLine(t);return html.replace('<div class="task"','<div class="task" data-task-id="'+safe(t.id)+'"')};
+const v15PreviousSettingsView=settingsView;
+settingsView=function(){return v15PreviousSettingsView()+`<section class="card section"><h2>What's New • V1.5.0</h2><p class="muted tiny">Fixed oversized atlas icons on Tasks. Admin can delete unused coupons or archive purchased coupons without losing history. Weight goals now have editable goal icons, multiple milestones and reward icons.</p></section>`};
+
 </script></body></html>
