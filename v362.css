@@ -1,0 +1,4 @@
+.oq362-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:30px!important}
+.oq362-icon .atlas-icon,.oq362-quest-icon .atlas-icon{display:block;width:100%!important;height:100%!important}
+.oq362-quest-icon{width:48px;height:48px;float:left;margin:0 12px 8px 0;overflow:hidden;border-radius:9px}
+.oq362-quest:after{content:'';display:block;clear:both}
