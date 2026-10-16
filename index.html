@@ -427,7 +427,7 @@ settingsView=function(){return v15PreviousSettingsView()+`<section class="card s
 
 /* OUR QUEST 1.6.0 — normalized free-position icon crops and coupon atlas artwork. */
 const V16_VERSION='1.6.0';
-let v16Crop=null,v16Target='task',v16CouponDraft=null,v16Pointer=null;
+var v16Crop=null,v16Target='task',v16CouponDraft=null,v16Pointer=null;
 const v16LegacyIconHtml=atlasIconHtml;
 atlasIconHtml=function(ref){
  if(ref&&Number.isFinite(Number(ref.x))&&Number.isFinite(Number(ref.y))&&Number(ref.size)>0&&atlasSource(ref.page)){
@@ -669,7 +669,7 @@ oqBoot();
 </script>
 
 <script>
-/* V2.0.6: reliable atlas launcher and compact task editor. */
+/* V2.1.1: atlas launcher and compact task editor. */
 (function(){
  const compact=()=>{
   const type=String(window.modal||'').split('|')[0];
@@ -681,7 +681,7 @@ oqBoot();
  };
  const oldRender=window.render;
  window.render=function(){const out=oldRender.apply(this,arguments);compact();return out};
- document.addEventListener('click',e=>{const b=e.target.closest('[data-oq-atlas]');if(!b)return;e.preventDefault();e.stopPropagation();try{v16OpenCrop('task')}catch(err){console.error(err);alert('Icon picker error: '+err.message)}},true);
+ // Task atlas button uses its own onclick handler; do not launch twice during capture.
  compact();
 })();
 </script>
@@ -731,7 +731,6 @@ body:has(#v16CropPicker) .oq-xp-sticky,body:has(.modalback) .oq-xp-sticky{displa
    if(!atlasPickerPage||!data.atlasPages.some(p=>p.id===atlasPickerPage))atlasPickerPage=data.atlasPages[0].id;
    // Reset stale crop state and invoke the original crop editor, which supports
    // drag positioning, size adjustment and saving the crop reference.
-   v16Crop=null;
    oldCrop206(target,index);
    const picker=document.getElementById('v16CropPicker');
    if(!picker)throw Error('The icon selector did not open');
