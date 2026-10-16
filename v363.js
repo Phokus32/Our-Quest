@@ -24,7 +24,7 @@
  const oldAction=window.questAction;
  window.questAction=function(id,status){const q=get(id);if(q?.oq363Offer&&status==='accepted')return notify('Resolve the XP counteroffer before accepting');return oldAction.apply(this,arguments)};
  const oldRewards=window.rewardsView;
- window.rewardsView=function(){let html=oldRewards();html=html.replace(/<button[^>]*onclick="oq32CouponManage\(\)"[^>]*>[^<]*Manage \/ Edit Coupons<\/button>/g,'');html=html.replace(/<button[^>]*onclick="openModal\('reward'\)"[^>]*>[^<]*Create Coupon<\/button>/g,'');return html};
+ window.rewardsView=function(){let html=oldRewards();html=html.replace(/<button[^>]*onclick="openModal\('reward'\)"[^>]*>[^<]*Create Coupon<\/button>/g,'');return html};
  const oldRender=window.render;
- window.render=function(){const out=oldRender.apply(this,arguments);document.querySelectorAll('.sidefoot').forEach(el=>el.innerHTML=el.innerHTML.replace(/V3\.6\.[0-9]+/g,'V3.6.3'));return out};
+ window.render=function(){const out=oldRender.apply(this,arguments);document.querySelectorAll('.sidefoot').forEach(el=>el.innerHTML=el.innerHTML.replace(/V3\.6\.[0-9]+/g,'V3.6.4'));return out};
 })();

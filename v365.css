@@ -1,0 +1,2 @@
+.oq365-more-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:14px}.oq365-more-grid button{text-align:left}.oq365-goal-actions{margin-top:14px}.oq365-goal-list{margin-top:20px;padding:16px;border:1px solid #71528b;border-radius:12px}.oq365-goal-list .row,.oq365-other-goals .row{padding:9px 0;border-bottom:1px solid #42304d}.oq365-provider{margin-top:8px}.oq365-more{width:100%;text-align:left}
+@media(max-width:700px){.oq365-more-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
