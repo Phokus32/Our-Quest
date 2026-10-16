@@ -1,0 +1,1 @@
+V3.1.1 hotfix: opens the weight-loss goal editor directly without re-rendering the Goals page. All V3.1 files included. Does not reset Supabase data. Test Edit Goal & Milestones, add/edit milestones, save, reload, and verify on another device.
