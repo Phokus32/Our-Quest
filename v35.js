@@ -1,6 +1,6 @@
 /* Our Quest V3.5: grid-cell selection and targeted save repairs. */
 'use strict';
-const oq35Version='3.5.0';
+const oq35Version='3.5.1';
 const oq35TemplateIcons=new Map();
 function oq35Ref(page,cell){return {page,cell,x:(cell%10)/10,y:Math.floor(cell/10)/10,size:.1}}
 function oq35Icon(ref){if(!ref)return '✦';return atlasIconHtml(ref)}
@@ -11,17 +11,31 @@ function oq35Picker(callback,selected){
  document.getElementById('oq35-picker')?.remove();
  const page=pages.find(x=>x.id===selected?.page)||pages[0];
  const holder=document.createElement('div');holder.id='oq35-picker';holder.className='modalback';holder.style.zIndex='120000';
- holder.innerHTML=`<div class="modal oq35-modal" role="dialog" aria-modal="true" aria-label="Select an icon"><div class="row between"><h2>Select an Icon</h2><button class="btn2" type="button" id="oq35-close">Close</button></div><label>Icon sheet<select id="oq35-page">${pages.map(x=>`<option value="${safe(x.id)}" ${x.id===page.id?'selected':''}>${safe(x.name||x.id)}</option>`).join('')}</select></label><p class="tiny muted">Tap any square. Each sheet is divided into exactly 10 rows and 10 columns.</p><div id="oq35-cells" class="oq35-cells"></div><p id="oq35-feedback" class="tiny muted">100 icons on this sheet</p></div>`;
+ holder.innerHTML=`<div class="modal oq35-modal" role="dialog" aria-modal="true" aria-label="Select an icon"><div class="row between"><h2>Select an Icon</h2><button class="btn2" type="button" id="oq35-close">Close</button></div><label>Icon sheet<select id="oq35-page">${pages.map(x=>`<option value="${safe(x.id)}" ${x.id===page.id?'selected':''}>${safe(x.name||x.id)}</option>`).join('')}</select></label><p class="tiny muted">Tap an icon on the original sheet. The selection overlay is exactly 10 × 10 with no gaps or resizing.</p><div id="oq35-cells" class="oq35-cells"></div><p id="oq35-feedback" class="tiny muted">100 icons on this sheet</p></div>`;
  document.body.appendChild(holder);
  const close=()=>holder.remove();holder.querySelector('#oq35-close').onclick=close;
  holder.onclick=e=>{if(e.target===holder)close()};
  const grid=holder.querySelector('#oq35-cells');
- function draw(id){const src=atlasSource(id);grid.replaceChildren();for(let i=0;i<100;i++){
-  const b=document.createElement('button');b.type='button';b.className='oq35-cell';b.title=`Row ${Math.floor(i/10)+1}, column ${i%10+1}`;b.setAttribute('aria-label',b.title);
-  const icon=document.createElement('span');icon.className='oq35-sprite';icon.style.backgroundImage=`url(${JSON.stringify(src)})`;icon.style.backgroundPosition=`${(i%10)*100/9}% ${Math.floor(i/10)*100/9}%`;b.appendChild(icon);
-  if(selected?.page===id&&(Number(selected.cell)===i||(!Number.isInteger(Number(selected.cell))&&Math.floor(Number(selected.y)*10)*10+Math.floor(Number(selected.x)*10)===i)))b.classList.add('selected');
-  b.onclick=()=>{const ref=oq35Ref(id,i);try{callback(ref);close()}catch(err){console.error('Icon selection failed',err);notify('Could not apply icon: '+err.message)}};grid.appendChild(b);
- }}
+ function draw(id){
+  const src=atlasSource(id);
+  // Render ONE intact image beneath an exactly coincident 10x10 hit grid.
+  // Sprite backgrounds inside buttons drift because borders/gaps shrink their
+  // painting areas; the image and grid must share the SAME coordinate space.
+  grid.replaceChildren();
+  const sheet=document.createElement('img');sheet.className='oq351-sheet';
+  sheet.alt='Icon atlas sheet';sheet.src=src;sheet.draggable=false;
+  sheet.onerror=()=>{holder.querySelector('#oq35-feedback').textContent='Could not load this atlas sheet. Check that its PNG is uploaded to assets.'};
+  grid.appendChild(sheet);
+  for(let i=0;i<100;i++){
+   const b=document.createElement('button');b.type='button';b.className='oq35-cell';
+   b.title=`Row ${Math.floor(i/10)+1}, column ${i%10+1}`;
+   b.setAttribute('aria-label',b.title);
+   b.style.left=`${i%10*10}%`;b.style.top=`${Math.floor(i/10)*10}%`;
+   if(selected?.page===id&&(Number(selected.cell)===i||(!Number.isInteger(Number(selected.cell))&&Math.floor(Number(selected.y)*10)*10+Math.floor(Number(selected.x)*10)===i)))b.classList.add('selected');
+   b.onclick=()=>{const ref=oq35Ref(id,i);try{callback(ref);close()}catch(err){console.error('Icon selection failed',err);notify('Could not apply icon: '+err.message)}};
+   grid.appendChild(b);
+  }
+ }
  holder.querySelector('#oq35-page').onchange=e=>draw(e.target.value);draw(page.id);
 }
 // Preserve the existing icon storage format while replacing all crop interactions.
@@ -83,4 +97,4 @@ window.v15WeightEditorHtml=function(){let html=oq35OldGoalHtml();if(!html)return
 document.addEventListener('submit',e=>{if(e.target?.matches('form[onsubmit*="v15SaveGoal"],form[onsubmit*="submitModal"]'))e.preventDefault()},true);
 // Ensure the on-screen version matches the actual files.
 const oq35Render=window.render;
-window.render=function(){const result=oq35Render.apply(this,arguments);document.querySelectorAll('.sidefoot').forEach(el=>{el.innerHTML=el.innerHTML.replace(/V3\.3\.2/g,'V3.5.0')});return result};
+window.render=function(){const result=oq35Render.apply(this,arguments);document.querySelectorAll('.sidefoot').forEach(el=>{el.innerHTML=el.innerHTML.replace(/V3\.3\.2/g,'V3.5.1')});return result};

@@ -8,3 +8,9 @@
 .oq35-review-preview .atlas-icon{width:42px!important;height:42px!important}
 .oq35-milestone-description{grid-column:1/-1;margin-bottom:8px}
 @media(max-width:550px){.oq35-cells{gap:1px;padding:1px}.oq35-cell{border-width:1px}.oq35-modal{padding:12px!important}}
+
+/* V3.5.1: zero-gap overlay precisely coincident with the original atlas image. */
+.oq35-cells{position:relative!important;display:block!important;width:100%!important;aspect-ratio:1!important;gap:0!important;padding:0!important;overflow:hidden!important;border-radius:0!important;background:transparent!important}
+.oq351-sheet{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none}
+.oq35-cells>.oq35-cell{position:absolute!important;width:10%!important;height:10%!important;aspect-ratio:auto!important;margin:0!important;padding:0!important;min-width:0!important;min-height:0!important;border:1px solid rgba(189,158,219,.42)!important;border-radius:0!important;background:transparent!important;box-sizing:border-box!important;z-index:1}
+.oq35-cells>.oq35-cell:hover,.oq35-cells>.oq35-cell:focus-visible,.oq35-cells>.oq35-cell.selected{outline:3px solid #f5c77d!important;outline-offset:-3px!important;background:rgba(160,95,221,.17)!important;z-index:2}
