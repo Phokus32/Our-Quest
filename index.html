@@ -83,7 +83,7 @@ const dailyXP=(player,date)=>data.ledger.filter(t=>t.player===player&&t.kind==='
 function periodKey(date,kind){return datePeriod(date,kind)}
 function settleChampions(){let now=new Date();for(let offset=1;offset<=35;offset++){let d=new Date(now);d.setDate(d.getDate()-offset);let date=localDate(d);for(let kind of ['daily','weekly','monthly']){if(kind==='weekly'&&d.getDay()!==0)continue;if(kind==='monthly'&&new Date(d.getFullYear(),d.getMonth()+1,0).getDate()!==d.getDate())continue;let key=periodKey(date,kind);if(data.champions.some(c=>c.kind===kind&&c.key===key))continue;let from=kind==='daily'?date:kind==='weekly'?periodKey(date,'weekly'):date.slice(0,7)+'-01';let scores=data.players.map(p=>({id:p.id,xp:data.ledger.filter(t=>t.player===p.id&&t.kind==='xp'&&t.amount>0&&t.source!=='champion'&&t.at.slice(0,10)>=from&&t.at.slice(0,10)<=date).reduce((a,t)=>a+t.amount,0)}));let max=Math.max(...scores.map(x=>x.xp));let winners=max>0?scores.filter(x=>x.xp===max).map(x=>x.id):[];data.champions.push({id:uid(),kind,key,date,winners,scores});if(winners.length){let bonus=Number(data.settings[kind+'BonusXP']||0),coins=kind==='daily'?Number(data.settings.dailyBonusCoins||0):0;winners.forEach(id=>{if(bonus)credit(id,bonus,'champion',kind+' winner '+key);if(coins){data.players.find(p=>p.id===id).coins+=coins;transaction(id,'gold',coins,'champion',kind+' winner '+key)}})}}}save()}
 function award(xp){credit(data.current,xp,'task','Task completion')}
-function nav(to){page=to;filter='All';render();window.scrollTo(0,0)}function taskVisible(t){return t.owner==='shared'||t.owner===data.current}function render(){const titles={home:'Your Adventure',tasks:'Quest Journal',quests:'Quest Board',rewards:'Treasure Shop',messages:'Messages',stats:'Adventure Chronicle',goals:'Long-Term Goals',settings:'Settings & Admin',approvals:'Approval Inbox',more:'More Adventures',requests:'XP Requests',photos:'Photo Library',atlas:'Icon Atlas Library'};const tabs=[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Rewards'],['messages','✉','Messages'],['stats','◫','Stats'],['goals','◈','Goals'],['approvals','✓','Approvals'],['settings','⚙','Settings']];document.getElementById('root').innerHTML=`<div class="app"><aside class="side"><div class="brand"><img src="assets/our-quest-icon.png"><div><b>Our Quest</b><small>A SHARED ADVENTURE</small></div></div><nav class="nav">${tabs.map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav><div class="sidefoot">✦ V1.5.0 local preview<br>Local demonstration mode<br><br>Data is saved on this device only. Cloud syncing is not connected.</div></aside><main><header class="top"><div><div class="eyebrow">✧ OUR QUEST · ${safe(new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}))}</div><h1>${titles[page]||'Our Quest'}</h1></div><div class="topright"><span class="chip">🪙 ${num(me().coins)}</span><select class="selectSmall" aria-label="Active demo profile" onchange="switchPlayer(this.value)">${data.players.map(p=>`<option value="${p.id}" ${p.id===data.current?'selected':''}>${p.icon} ${safe(p.name)}</option>`).join('')}</select></div></header><div class="notice">Preview mode: Switching players simulates two accounts on this browser. It is not secure authentication or cross-phone synchronization.</div>${({home:homeView,tasks:tasksView,quests:questsView,rewards:rewardsView,messages:messagesView,stats:statsView,goals:goalsView,settings:settingsView,approvals:approvalsView,more:moreView,requests:requestXPView,photos:photosView,atlas:atlasView}[page]||homeView)()}</main><nav class="bottom">${[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Shop'],['more','☷','More']].map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav></div>${modal?modalView():''}`}
+function nav(to){page=to;filter='All';render();window.scrollTo(0,0)}function taskVisible(t){return t.owner==='shared'||t.owner===data.current}function render(){const titles={home:'Your Adventure',tasks:'Quest Journal',quests:'Quest Board',rewards:'Treasure Shop',messages:'Messages',stats:'Adventure Chronicle',goals:'Long-Term Goals',settings:'Settings & Admin',approvals:'Approval Inbox',more:'More Adventures',requests:'XP Requests',photos:'Photo Library',atlas:'Icon Atlas Library',calendar:'Adventure Calendar',journal:'Adventure Journal',adventures:'Couple Adventures',chests:'Treasure Chests',wishlist:'Reward Wishlist',analytics:'Adventure Analytics',search:'Universal Search',history:'Activity History',economy:'Game Economy',badges:'Achievements'};const tabs=[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Rewards'],['messages','✉','Messages'],['stats','◫','Stats'],['goals','◈','Goals'],['approvals','✓','Approvals'],['settings','⚙','Settings']];document.getElementById('root').innerHTML=`<div class="app"><aside class="side"><div class="brand"><img src="assets/our-quest-icon.png"><div><b>Our Quest</b><small>A SHARED ADVENTURE</small></div></div><nav class="nav">${tabs.map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav><div class="sidefoot">✦ V1.5.0 local preview<br>Local demonstration mode<br><br>Data is saved on this device only. Cloud syncing is not connected.</div></aside><main><header class="top"><div><div class="eyebrow">✧ OUR QUEST · ${safe(new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}))}</div><h1>${titles[page]||'Our Quest'}</h1></div><div class="topright"><span class="chip">🪙 ${num(me().coins)}</span><select class="selectSmall" aria-label="Active demo profile" onchange="switchPlayer(this.value)">${data.players.map(p=>`<option value="${p.id}" ${p.id===data.current?'selected':''}>${p.icon} ${safe(p.name)}</option>`).join('')}</select></div></header><div class="notice">Preview mode: Switching players simulates two accounts on this browser. It is not secure authentication or cross-phone synchronization.</div>${({home:homeView,tasks:tasksView,quests:questsView,rewards:rewardsView,messages:messagesView,stats:statsView,goals:goalsView,settings:settingsView,approvals:approvalsView,more:moreView,requests:requestXPView,photos:photosView,atlas:atlasView,calendar:oq21Calendar,journal:oq21Journal,adventures:oq21Adventures,chests:oq21Chests,wishlist:oq21Wishlist,analytics:oq21Analytics,search:oq21Search,history:oq21History,economy:oq21Economy,badges:oq21Badges}[page]||homeView)()}</main><nav class="bottom">${[['home','⌂','Home'],['tasks','✓','Tasks'],['quests','⚔','Quests'],['rewards','♛','Shop'],['more','☷','More']].map(t=>`<button class="${page===t[0]?'active':''}" onclick="nav('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('')}</nav></div>${modal?modalView():''}`}
 function homeView(){const p=me(),logs=data.logs.filter(l=>l.player===p.id&&l.date===today()&&!l.undone);return `<div class="hero"><div class="card heroMain"><div class="eyebrow">WELCOME BACK, ${safe(p.name.toUpperCase())}</div><div class="heroTitle">Level ${level(p)} ${rankName(level(p))}</div><div class="heroSub">Every little victory is part of your story. Your next chapter starts today.</div><div class="row between" style="margin-top:20px"><span class="tiny">✦ ${num(p.xp)} XP</span><span class="tiny">${num(levelNext(p)-p.xp)} to next level</span></div><div class="bar"><i style="width:${levelPercent(p)}%"></i></div><button class="btn" style="margin-top:14px" onclick="nav('tasks')">✦ Log an Activity</button></div><div class="heroAside"><div class="card"><div class="statLabel">Today's completions</div><div class="stat">${logs.length}</div><span class="green tiny">✦ +${num(logs.reduce((s,l)=>s+l.xp,0))} XP today</span></div><div class="card"><div class="statLabel">Gold coins</div><div class="stat">${num(p.coins)}</div><span class="muted tiny">Spend in Treasure Shop</span></div><div class="card"><div class="statLabel">Active quests</div><div class="stat">${data.quests.filter(q=>q.to===p.id&&q.status==='accepted').length}</div><span class="muted tiny">Adventures awaiting you</span></div><div class="card"><div class="statLabel">Partner's level</div><div class="stat">${level(other())}</div><span class="muted tiny">${safe(other().name)} · ${num(other().xp)} XP</span></div></div></div><div class="grid two"><section class="card"><div class="row between"><h2>✧ Quick Log</h2><button class="btn2 tiny" onclick="nav('tasks')">All Tasks →</button></div>${data.tasks.filter(taskVisible).slice(0,5).map(taskLine).join('')||'<div class="empty">Create your first task.</div>'}</section><section class="card"><div class="row between"><h2>⚔ Your Quest Board</h2><button class="btn2 tiny" onclick="nav('quests')">View Quests →</button></div>${data.quests.filter(q=>q.to===p.id&&q.status!=='approved'&&q.status!=='declined').slice(0,4).map(questLine).join('')||'<div class="empty">No quests yet. Send your partner an adventure!</div>'}<hr class="divider"><h3>✉ Latest Message</h3><p class="muted tiny">${data.messages.length?safe(data.messages.at(-1).text):'Your shared story is waiting to be written.'}</p></section></div><section class="section card"><div class="row between"><h2>Recent Achievements</h2><button class="btn2 tiny" onclick="nav('stats')">View History →</button></div><div class="grid">${[['🌟','First Steps',p.xp>0],['⚔️','Getting Started',data.logs.filter(l=>l.player===p.id).length>=5],['👑','Rising Hero',level(p)>=3]].map(([i,n,ok])=>`<div class="card" style="text-align:center;opacity:${ok?1:.45}"><div style="font-size:31px">${i}</div><b>${n}</b><div class="tiny muted">${ok?'Unlocked':'Locked'}</div></div>`).join('')}</div></section>`}
 function taskLine(t){let count=countTask(t),max=maxTask(t),done=count>=max,available=taskAvailable(t);return `<div class="task" style="opacity:${done||!available?'.55':'1'}"><div class="taskIcon">${t.emoji?.startsWith('data:')?`<img src="${t.emoji}">`:safe(t.emoji||'✨')}</div><div style="flex:1;min-width:0"><div class="taskName">${safe(t.name)}</div><div class="tiny muted">${safe(t.category)} · ${safe(t.frequency||'daily')} · <span class="gold">+${t.xp} XP</span> · ${count}/${max} completed</div>${done?'<span class="tag">✓ Complete until next reset</span>':!available?'<span class="tag">Outside availability window</span>':''}</div><button class="iconbtn" onclick="logTask('${t.id}')" ${done||!available?'disabled':''}>${done?'✓':'+ XP'}</button></div>`}
 function tasksView(){let cats=['All',...new Set(data.tasks.filter(taskVisible).map(t=>t.category))],list=data.tasks.filter(t=>taskVisible(t)&&(filter==='All'||t.category===filter));return `<div class="row between wrap"><p class="muted">Recurring activities reset by schedule. Completed tasks lock until their next period.</p>${isAdmin()?`<div class="row wrap"><button class="btn2" onclick="openModal('category')">⚙ Categories</button><button class="btn" onclick="openModal('task')">＋ Create Task</button></div>`:''}</div><div class="tabs">${cats.map(c=>`<button class="${filter===c?'active':''}" onclick="setFilter('${safe(c)}')">${safe(c)}</button>`).join('')}</div><section class="card">${list.map(t=>`<div class="row between" style="gap:5px"><div style="flex:1;min-width:0">${taskLine(t)}</div>${isAdmin()?`<button class="iconbtn" title="Edit task" onclick="openModal('editTask','${t.id}')">✎</button>`:''}</div>`).join('')||'<div class="empty">No tasks in this category.</div>'}</section>${isAdmin()?`<div class="card section"><h2>Bulk Task Tools</h2><button class="btn2" onclick="duplicateTaskPrompt()">Duplicate a task</button> <button class="btn2" onclick="bulkSchedule()">Change category schedule</button></div>`:''}`}
@@ -442,7 +442,27 @@ function v16CropFrom(ref){
  if(ref&&Number.isInteger(Number(ref.cell))){let c=Number(ref.cell);return {page:ref.page,x:(c%10)/10,y:Math.floor(c/10)/10,size:.1};}
  return {page:atlasPickerPage||data.atlasPages[0].id,x:.35,y:.35,size:.12};
 }
+// V2.0.5: Cloud payloads may contain an empty atlasPages array.
+// Restore built-in atlas metadata from bundled assets without discarding user uploads.
+function oqEnsureAtlasPages(){
+ const builtin=[
+  {id:'everyday',name:'Everyday Adventures',src:'assets/everyday-adventures-atlas.png',builtin:true},
+  {id:'more-adventures',name:'More Adventures',src:'assets/more-adventures-atlas.png',builtin:true},
+  {id:'life-adventures',name:'Life & Adventures',src:'assets/life-adventures-atlas.png',builtin:true},
+  {id:'grand-adventures',name:'Grand Adventures',src:'assets/grand-adventures-atlas.png',builtin:true}
+ ];
+ if(!Array.isArray(data.atlasPages))data.atlasPages=[];
+ data.atlasPages=data.atlasPages.filter(p=>p&&typeof p.id==='string');
+ for(const p of builtin){
+  const existing=data.atlasPages.find(a=>a.id===p.id);
+  if(existing)Object.assign(existing,p);else data.atlasPages.push({...p});
+  atlasSources[p.id]=p.src;
+ }
+ if(!data.atlasPages.some(p=>p.id===atlasPickerPage))atlasPickerPage=data.atlasPages[0].id;
+ return data.atlasPages;
+}
 function v16OpenCrop(target='task',index=-1){
+ oqEnsureAtlasPages();
  if(!isAdmin())return notify('Only Matthew can assign artwork');
  v16Target=target;
  if(target==='goal'||target==='milestone'){if(!v15GoalDraft)return;v15SyncDraftForm();v15IconTarget={target,index};}
@@ -459,7 +479,9 @@ function v16OpenCrop(target='task',index=-1){
 
 }
 function v16CropHtml(){
+ oqEnsureAtlasPages();
  let page=data.atlasPages.find(p=>p.id===v16Crop.page)||data.atlasPages[0];
+ if(!page)throw Error('No icon sheets are available');
  return `<div class="modalback atlas-pick-modal" id="v16CropPicker" onclick="if(event.target===this)v16CloseCrop()"><div class="modal" style="width:min(810px,98vw);max-height:94vh;overflow:auto"><div class="row between"><h2>▦ Position Your Icon</h2><button class="iconbtn" type="button" onclick="v16CloseCrop()">✕</button></div><p class="tiny muted">Tap or drag the gold square over any icon. Adjust its size until the artwork fits. Works with all three atlas pages and uploaded sheets.</p><div class="field"><label>Icon sheet</label><select id="v16CropPage" onchange="v16ChangeCropPage(this.value)">${data.atlasPages.map(p=>`<option value="${safe(p.id)}" ${p.id===page.id?'selected':''}>${safe(p.name)}</option>`).join('')}</select></div><div class="crop-stage" id="v16CropStage" onpointerdown="v16PointerDown(event)" onpointermove="v16PointerMove(event)" onpointerup="v16PointerUp(event)" onpointercancel="v16PointerUp(event)"><img id="v16CropSheet" src="${atlasSource(page.id)}" alt="${safe(page.name)} atlas image" draggable="false"><div id="v16CropBox" class="crop-box"></div></div><div class="field"><label>Selection size <b id="v16CropSizeLabel">12%</b> of sheet width</label><input class="crop-slider" id="v16CropSize" type="range" min="5" max="24" step="0.5" value="${(v16Crop.size*100).toFixed(1)}" oninput="v16ResizeCrop(this.value)"></div><div class="crop-picker-preview"><div class="atlas-preview" id="v16CropPreview" style="width:76px;height:76px"></div><span class="tiny muted">Live preview: this is how the cropped icon will appear on tasks, coupons and goals.</span></div><div class="row wrap" style="margin-top:14px;justify-content:flex-end"><button type="button" class="btn2" onclick="v16CloseCrop()">Cancel</button><button type="button" class="btn" onclick="v16ApplyCrop()">✓ Use This Icon</button></div></div></div>`;
 }
 function v16ChangeCropPage(id){if(!atlasSource(id))return;v16Crop.page=id;v16Crop.x=.35;v16Crop.y=.35;let img=document.getElementById('v16CropSheet');if(img)img.src=atlasSource(id);v16UpdateCrop();}
@@ -580,6 +602,7 @@ function oqNormalize(payload){
  const defaults=seed();
  if(!Array.isArray(x.atlasPages))x.atlasPages=structuredClone(defaults.atlasPages||[]);
  for(const pg of (defaults.atlasPages||[])){if(pg.builtin&&!x.atlasPages.some(a=>a.id===pg.id))x.atlasPages.push(structuredClone(pg));}
+ for(const pg of [{id:'everyday',name:'Everyday Adventures',src:'assets/everyday-adventures-atlas.png',builtin:true},{id:'more-adventures',name:'More Adventures',src:'assets/more-adventures-atlas.png',builtin:true},{id:'life-adventures',name:'Life & Adventures',src:'assets/life-adventures-atlas.png',builtin:true},{id:'grand-adventures',name:'Grand Adventures',src:'assets/grand-adventures-atlas.png',builtin:true}]){let found=x.atlasPages.find(a=>a?.id===pg.id);if(found)Object.assign(found,pg);else x.atlasPages.push(pg)}
  for(const field of ['players','tasks','logs','quests','categories','ledger','champions','achievements','rewards','purchases','messages','goals','events','xpRequests','photoLibrary']){
    if(!Array.isArray(x[field]))x[field]=defaults[field]||[];
  }
@@ -646,7 +669,7 @@ oqBoot();
 </script>
 
 <script>
-/* V2.0.4: reliable atlas launcher and compact task editor. */
+/* V2.0.6: reliable atlas launcher and compact task editor. */
 (function(){
  const compact=()=>{
   const type=String(window.modal||'').split('|')[0];
@@ -662,4 +685,65 @@ oqBoot();
  compact();
 })();
 </script>
-</body></html>
+
+<style>
+/* V2.0.6 mobile task action overflow fix */
+.oq-task-actions{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:5px;flex:0 0 68px;position:relative}
+.oq-task-actions .oq-xp-action{font-weight:800;min-width:60px;padding:9px 7px;white-space:nowrap}
+.oq-task-actions .oq-menu-toggle{min-width:60px;padding:7px 6px;font-size:17px}
+.oq-task-menu{position:absolute;right:0;top:100%;z-index:160;background:#241732;border:1px solid #8462a4;border-radius:12px;padding:7px;box-shadow:0 12px 25px #0009;min-width:145px;display:flex;flex-direction:column;gap:5px}
+.oq-task-menu button{width:100%;text-align:left;white-space:nowrap}
+.oq-task-menu[hidden]{display:none!important}
+body:has(#v16CropPicker) .oq-xp-sticky,body:has(.modalback) .oq-xp-sticky{display:none!important}
+@media(max-width:700px){main .card>.row.between:has(>.task),main .card>.row.between:has(.task){display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:5px!important}main .card>.row.between:has(.task)>.task{flex:1 1 0;min-width:0}.task{gap:6px!important}.taskName{overflow-wrap:anywhere}.oq-task-actions{flex-basis:62px}.oq-task-actions button{font-size:12px}}
+</style>
+<script>
+/* V2.0.6: independent task action menus and fail-safe atlas launcher. */
+(function(){
+ const oldRender206=window.render;
+ function tidyTaskActions(){
+  if(page!=='tasks'||!isAdmin())return;
+  document.querySelectorAll('.task[data-task-id]').forEach(task=>{
+   const row=task.closest('.row.between');if(!row||row.dataset.oqCompact==='1')return;
+   const taskId=task.dataset.taskId;
+   const edit=row.querySelector('button[title="Edit task"]');
+   const manage=row.querySelector('.oq-manage');
+   const xp=task.querySelector('button[onclick*="logTask"]');
+   if(!xp)return;
+   row.dataset.oqCompact='1';
+   const dock=document.createElement('div');dock.className='oq-task-actions';
+   xp.classList.add('oq-xp-action');dock.append(xp);
+   const menuBtn=document.createElement('button');menuBtn.type='button';menuBtn.className='btn2 oq-menu-toggle';menuBtn.textContent='☰';menuBtn.setAttribute('aria-label','More task options');menuBtn.setAttribute('aria-expanded','false');
+   const menu=document.createElement('div');menu.className='oq-task-menu';menu.hidden=true;
+   if(edit){edit.removeAttribute('title');edit.className='btn2';edit.textContent='✎ Edit';menu.append(edit)}
+   if(manage){for(const b of [...manage.querySelectorAll('button')])menu.append(b);manage.remove()}
+   menuBtn.addEventListener('click',e=>{e.stopPropagation();document.querySelectorAll('.oq-task-menu').forEach(m=>{if(m!==menu)m.hidden=true});menu.hidden=!menu.hidden;menuBtn.setAttribute('aria-expanded',String(!menu.hidden))});
+   dock.append(menuBtn,menu);row.append(dock);
+  });
+ }
+ window.render=function(){let r=oldRender206.apply(this,arguments);tidyTaskActions();return r};
+ document.addEventListener('click',e=>{if(e.target.closest('.oq-task-actions'))return;document.querySelectorAll('.oq-task-menu').forEach(m=>m.hidden=true)});
+ const oldCrop206=window.v16OpenCrop;
+ window.v16OpenCrop=function(target='task',index=-1){
+  try{
+   oqEnsureAtlasPages();
+   if(!Array.isArray(data.atlasPages)||!data.atlasPages.length)throw Error('Icon sheet metadata is missing');
+   if(!atlasPickerPage||!data.atlasPages.some(p=>p.id===atlasPickerPage))atlasPickerPage=data.atlasPages[0].id;
+   // Reset stale crop state and invoke the original crop editor, which supports
+   // drag positioning, size adjustment and saving the crop reference.
+   v16Crop=null;
+   oldCrop206(target,index);
+   const picker=document.getElementById('v16CropPicker');
+   if(!picker)throw Error('The icon selector did not open');
+   const img=picker.querySelector('#v16CropSheet');
+   if(img){img.addEventListener('error',()=>{let msg=picker.querySelector('.oq-atlas-load-error');if(!msg){msg=document.createElement('p');msg.className='oq-atlas-load-error';msg.style.color='#ff9cac';img.before(msg)}msg.textContent='This icon sheet could not load. Check that the assets folder was uploaded to GitHub Pages.'});}
+  }catch(err){console.error('Our Quest atlas picker:',err);alert('Icon picker could not open: '+(err.message||err))}
+ };
+ // The task button may have been rebound in an older hotfix. Route both
+ // inline and captured clicks through the same fixed editor.
+ window.openAtlasPicker=function(){window.v16OpenCrop('task')};
+ window.tidyTaskActions206=tidyTaskActions;
+ tidyTaskActions();
+})();
+</script>
+<link rel="stylesheet" href="v21.css"><script src="v21.js"></script></body></html>

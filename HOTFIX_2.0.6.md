@@ -1,0 +1,1 @@
+Our Quest V2.0.6: Mobile task actions now show +XP and a compact ☰ menu containing Edit, Hide/Show and Archive. Atlas picker launcher checks metadata, reports missing assets and attempts to open the movable crop editor. Preserve config.js and assets when uploading. This build has not been tested against the live Supabase project.

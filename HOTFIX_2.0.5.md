@@ -1,0 +1,1 @@
+Our Quest V2.0.5: Repairs the atlas selector crash when cloud state has no atlasPages. Restores all four bundled atlas definitions on cloud load and before opening the crop editor. No SQL changes. Deploy all files, then hard-refresh. Verify task icon selection and saving. Syntax checked, not browser-tested.
