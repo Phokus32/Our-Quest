@@ -1,0 +1,1 @@
+Our Quest V3.6.3 test release. Quest counteroffers, comments and request-more-work. Existing approval logic retains XP until approval. Mobile top header hidden. Duplicate shop controls removed. Keep existing assets folder. Test both players before relying on production.
