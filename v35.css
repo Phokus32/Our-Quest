@@ -1,0 +1,10 @@
+/* V3.5 exact 10 x 10 atlas picker */
+.oq35-modal{width:min(790px,96vw)!important;max-height:92dvh;overflow:auto}
+.oq35-cells{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:2px;width:100%;aspect-ratio:1;background:#25172d;padding:3px;border-radius:8px}
+.oq35-cell{min-width:0;min-height:0;padding:0;aspect-ratio:1;border:1px solid #806b94;background:rgba(255,255,255,.025);cursor:pointer;border-radius:3px;overflow:hidden;display:block}
+.oq35-cell:hover,.oq35-cell:focus-visible,.oq35-cell.selected{outline:2px solid #f0bf66;outline-offset:-2px;background:#644385}
+.oq35-sprite{display:block;width:100%;height:100%;background-repeat:no-repeat;background-size:1000% 1000%}
+.oq35-review-preview{display:inline-flex;width:44px;height:44px;align-items:center;justify-content:center}
+.oq35-review-preview .atlas-icon{width:42px!important;height:42px!important}
+.oq35-milestone-description{grid-column:1/-1;margin-bottom:8px}
+@media(max-width:550px){.oq35-cells{gap:1px;padding:1px}.oq35-cell{border-width:1px}.oq35-modal{padding:12px!important}}
