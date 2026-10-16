@@ -12,8 +12,9 @@ function oq33PlayerView(){return oq33ActualAdmin()&&oq33View==='player'}
 function oq33SetView(v){oq33View=v==='player'?'player':'admin';try{localStorage.setItem(oq33ViewKey,oq33View)}catch{}render()}
 // Global isAdmin is used by all existing permission checks. Player view is presentation only:
 // retain the original authorization function for sensitive actions and never rewrite data.current.
-const oq33ActualAdmin=window.isAdmin;
-window.isAdmin=function(){return oq33ActualAdmin()&&!oq33PlayerView()};
+const oq33ActualAdmin=()=>data.current==='matthew';
+// Keep original lexical isAdmin unchanged: it is not exported on window.
+// Presentation-only player view is applied to V3.3 UI controls.
 // Goal editor: remove TDZ by changing its declaration in the base file to var; mount once.
 window.v15EditGoal=function(id){
  if(!oq33ActualAdmin())return notify('Only Matthew can edit goals');
@@ -60,7 +61,7 @@ window.submitModal=function(e,type,id){if(type!=='task'&&type!=='editTask')retur
  e.target.querySelector('[name=oq32Start]').value='2026-'+a;e.target.querySelector('[name=oq32End]').value='2026-'+b;
  }return oq33SubmitOld.apply(this,arguments)};
 // Category editing with atlas icons; rename linked tasks without changing task IDs/history.
-function oq33Categories(){if(!isAdmin())return;let cats=data.categories||[];oq31Open(`<h2>Manage Categories</h2><p class="tiny muted">Renaming updates linked tasks. Existing history stays intact.</p>${cats.map((c,i)=>`<div class="oq33-category"><span id="oq33-cat-icon-${i}">${c.atlas?atlasIconHtml(c.atlas):oq33Safe(c.emoji||'✨')}</span><input aria-label="Category name" id="oq33-cat-name-${i}" value="${oq33Safe(c.name)}"><button type="button" class="btn2" onclick="oq33CategoryIcon(${i})">Icon</button><button type="button" class="btn2" onclick="oq33SaveCategory(${i})">Save</button></div>`).join('')}<div class="actions"><button class="btn2" onclick="oq31Close()">Close</button></div>`)}
+function oq33Categories(){if(!oq33ActualAdmin()||oq33PlayerView())return;let cats=data.categories||[];oq31Open(`<h2>Manage Categories</h2><p class="tiny muted">Renaming updates linked tasks. Existing history stays intact.</p>${cats.map((c,i)=>`<div class="oq33-category"><span id="oq33-cat-icon-${i}">${c.atlas?atlasIconHtml(c.atlas):oq33Safe(c.emoji||'✨')}</span><input aria-label="Category name" id="oq33-cat-name-${i}" value="${oq33Safe(c.name)}"><button type="button" class="btn2" onclick="oq33CategoryIcon(${i})">Icon</button><button type="button" class="btn2" onclick="oq33SaveCategory(${i})">Save</button></div>`).join('')}<div class="actions"><button class="btn2" onclick="oq31Close()">Close</button></div>`)}
 const oq33CatDraft={};
 function oq33CategoryIcon(i){oq33PickIcon(ref=>{oq33CatDraft[i]=ref;let el=document.getElementById('oq33-cat-icon-'+i);if(el)el.innerHTML=atlasIconHtml(ref)})}
 function oq33SaveCategory(i){if(!isAdmin())return;let c=data.categories?.[i];if(!c)return;let name=document.getElementById('oq33-cat-name-'+i)?.value.trim();if(!name)return notify('Enter category name');if(data.categories.some((x,j)=>j!==i&&x.name.toLowerCase()===name.toLowerCase()))return notify('Category already exists');let old=c.name;c.name=name;if(oq33CatDraft[i])c.atlas={...oq33CatDraft[i]};for(let t of data.tasks)if(t.category===old)t.category=name;event('category updated',name);save();oq33Categories();render();notify('Category saved')}
