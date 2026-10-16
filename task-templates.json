@@ -3,384 +3,700 @@
     "id": "oq3-1",
     "name": "Make the bed",
     "category": "Home & Cleaning",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 0
+    "cell": 0,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-2",
     "name": "Wash dishes",
     "category": "Home & Cleaning",
-    "xp": 15,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 1
+    "cell": 1,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-3",
     "name": "Load dishwasher",
     "category": "Home & Cleaning",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 2
+    "cell": 2,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-4",
     "name": "Unload dishwasher",
     "category": "Home & Cleaning",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 3
+    "cell": 3,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-5",
     "name": "Wipe kitchen counters",
     "category": "Home & Cleaning",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 4
+    "cell": 4,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-6",
     "name": "Clean bathroom",
     "category": "Home & Cleaning",
-    "xp": 35,
-    "frequency": "weekly",
-    "cell": 5
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 5,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-7",
     "name": "Vacuum floors",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 6
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 6,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-8",
     "name": "Mop floors",
     "category": "Home & Cleaning",
-    "xp": 30,
-    "frequency": "weekly",
-    "cell": 7
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 7,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-9",
     "name": "Dust furniture",
     "category": "Home & Cleaning",
-    "xp": 20,
-    "frequency": "weekly",
-    "cell": 8
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 8,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-10",
     "name": "Take out trash",
     "category": "Home & Cleaning",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 9
+    "cell": 9,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-11",
     "name": "Clean refrigerator",
     "category": "Home & Cleaning",
-    "xp": 40,
-    "frequency": "monthly",
-    "cell": 10
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 10,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-12",
     "name": "Organize a room",
     "category": "Home & Cleaning",
-    "xp": 30,
-    "frequency": "weekly",
-    "cell": 11
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 11,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-13",
     "name": "Clean windows",
     "category": "Home & Cleaning",
-    "xp": 40,
-    "frequency": "monthly",
-    "cell": 12
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 12,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-14",
     "name": "Change bed sheets",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 13
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 13,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-15",
     "name": "Deep clean kitchen",
     "category": "Home & Cleaning",
-    "xp": 60,
-    "frequency": "monthly",
-    "cell": 14
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 14,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-16",
     "name": "Clean microwave",
     "category": "Home & Cleaning",
-    "xp": 20,
-    "frequency": "monthly",
-    "cell": 15
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 15,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-17",
     "name": "Clean oven",
     "category": "Home & Cleaning",
-    "xp": 40,
-    "frequency": "monthly",
-    "cell": 16
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 16,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-18",
     "name": "Scrub stovetop",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 17
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 17,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-19",
     "name": "Clean kitchen sink",
     "category": "Home & Cleaning",
-    "xp": 15,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 18
+    "cell": 18,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-20",
     "name": "Wipe cabinet fronts",
     "category": "Home & Cleaning",
-    "xp": 15,
-    "frequency": "weekly",
-    "cell": 19
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 19,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-21",
     "name": "Clean shower or tub",
     "category": "Home & Cleaning",
-    "xp": 30,
-    "frequency": "weekly",
-    "cell": 20
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 20,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-22",
     "name": "Scrub toilet",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 21
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 21,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-23",
     "name": "Clean bathroom mirrors",
     "category": "Home & Cleaning",
-    "xp": 15,
-    "frequency": "weekly",
-    "cell": 22
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 22,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-24",
     "name": "Clean baseboards",
     "category": "Home & Cleaning",
-    "xp": 35,
-    "frequency": "monthly",
-    "cell": 23
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 23,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-25",
     "name": "Clean ceiling fans",
     "category": "Home & Cleaning",
-    "xp": 30,
-    "frequency": "monthly",
-    "cell": 24
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 24,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-26",
     "name": "Disinfect light switches",
     "category": "Home & Cleaning",
-    "xp": 15,
-    "frequency": "monthly",
-    "cell": 25
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 25,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-27",
     "name": "Clean under furniture",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "monthly",
-    "cell": 26
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 26,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-28",
     "name": "Declutter a drawer",
     "category": "Home & Cleaning",
-    "xp": 15,
-    "frequency": "weekly",
-    "cell": 27
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 27,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-29",
     "name": "Organize pantry",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 28
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 28,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-30",
     "name": "Clean dishwasher filter",
     "category": "Home & Cleaning",
-    "xp": 20,
-    "frequency": "monthly",
-    "cell": 29
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 29,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-31",
     "name": "Defur Couches",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 30
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 30,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-32",
     "name": "Change Candle Batteries",
     "category": "Home & Cleaning",
-    "xp": 20,
-    "frequency": "monthly",
-    "cell": 31
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 31,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-33",
     "name": "Do Pilates",
     "category": "Fitness & Wellness",
-    "xp": 30,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 32
+    "cell": 32,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-34",
     "name": "Do Yoga",
     "category": "Fitness & Wellness",
-    "xp": 30,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 33
+    "cell": 33,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-35",
     "name": "Walk On Treadmill",
     "category": "Fitness & Wellness",
-    "xp": 30,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 34
+    "cell": 34,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-36",
     "name": "Weightlift",
     "category": "Fitness & Wellness",
-    "xp": 35,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 35
+    "cell": 35,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-37",
     "name": "Clean the stairs",
     "category": "Home & Cleaning",
-    "xp": 25,
-    "frequency": "weekly",
-    "cell": 36
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 36,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-38",
     "name": "Decorate for Halloween (inside)",
     "category": "Seasonal",
-    "xp": 75,
-    "frequency": "annual",
-    "cell": 38
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 38,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-39",
     "name": "Decorate for Halloween (outside)",
     "category": "Seasonal",
-    "xp": 100,
-    "frequency": "annual",
-    "cell": 39
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 39,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-40",
     "name": "Decorate for Christmas (outside)",
     "category": "Seasonal",
-    "xp": 100,
-    "frequency": "annual",
-    "cell": 40
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 40,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-41",
     "name": "Decorate for Christmas (inside)",
     "category": "Seasonal",
-    "xp": 75,
-    "frequency": "annual",
-    "cell": 49
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 49,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-42",
     "name": "Clean the shower",
     "category": "Home & Cleaning",
-    "xp": 30,
-    "frequency": "weekly",
-    "cell": 41
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 41,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-43",
     "name": "Feed the animals",
     "category": "Animal Care",
-    "xp": 15,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 42
+    "cell": 42,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-44",
     "name": "Deep clean litter boxes",
     "category": "Animal Care",
-    "xp": 40,
-    "frequency": "weekly",
-    "cell": 43
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 43,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-45",
     "name": "Refill cat water",
     "category": "Animal Care",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 44
+    "cell": 44,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-46",
     "name": "Refill Dani water",
     "category": "Animal Care",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 46
+    "cell": 46,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-47",
     "name": "Refill Bru water",
     "category": "Animal Care",
-    "xp": 10,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 47
+    "cell": 47,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
   },
   {
     "id": "oq3-48",
     "name": "Do a load of laundry",
     "category": "Laundry & Clothing",
-    "xp": 20,
+    "xp": 5,
     "frequency": "daily",
-    "cell": 48
+    "cell": 48,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0
+  },
+  {
+    "id": "oq31-1",
+    "name": "Mow the Lawn",
+    "category": "Yard & Outdoors",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 50,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-2",
+    "name": "Weed Whip",
+    "category": "Yard & Outdoors",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 51,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-3",
+    "name": "Clean the Grill",
+    "category": "Yard & Outdoors",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 52,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-4",
+    "name": "Get a Car Wash",
+    "category": "Vehicles",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 53,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-5",
+    "name": "Manually Wash Car",
+    "category": "Vehicles",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 54,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-6",
+    "name": "Clean Bedroom",
+    "category": "Home & Cleaning",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 55,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-7",
+    "name": "Clean Cat Room",
+    "category": "Home & Cleaning",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 56,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-8",
+    "name": "Clean Office",
+    "category": "Home & Cleaning",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 57,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-9",
+    "name": "Clean Upstairs Hallway",
+    "category": "Home & Cleaning",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 58,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-10",
+    "name": "Do Outside Flower Planting",
+    "category": "Yard & Outdoors",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 59,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-11",
+    "name": "Fold Laundry",
+    "category": "Laundry & Clothing",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 60,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-12",
+    "name": "Put Away Laundry",
+    "category": "Laundry & Clothing",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 61,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-13",
+    "name": "Refill CO2 Tanks",
+    "category": "Home Maintenance",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 62,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-14",
+    "name": "Give Robert a Haircut",
+    "category": "Personal Care",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 63,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-15",
+    "name": "Finish Reading a Book",
+    "category": "Personal Growth",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 64,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-16",
+    "name": "Shave Head",
+    "category": "Personal Care",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 65,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-17",
+    "name": "Shave Legs",
+    "category": "Personal Care",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 66,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-18",
+    "name": "Shave Nethers",
+    "category": "Personal Care",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 67,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-19",
+    "name": "Dye Hair",
+    "category": "Personal Care",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 68,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
+  },
+  {
+    "id": "oq31-20",
+    "name": "Trim Beard",
+    "category": "Personal Care",
+    "xp": 5,
+    "frequency": "daily",
+    "cell": 69,
+    "defaultOwner": "shared",
+    "streakBonusPercent": 0,
+    "atlasPage": "quest-life"
   }
 ]
