@@ -1,6 +1,6 @@
 /* Our Quest 3.3 - additive compatibility layer. Existing cloud records are not reset. */
 'use strict';
-const oq33Version='3.3.0';
+const oq33Version='3.3.2';
 const oq33Safe=v=>safe(String(v??''));
 const oq33Today=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const oq33DatePart=v=>String(v||'').slice(5);
@@ -12,7 +12,7 @@ function oq33PlayerView(){return oq33ActualAdmin()&&oq33View==='player'}
 function oq33SetView(v){oq33View=v==='player'?'player':'admin';try{localStorage.setItem(oq33ViewKey,oq33View)}catch{}render()}
 // Global isAdmin is used by all existing permission checks. Player view is presentation only:
 // retain the original authorization function for sensitive actions and never rewrite data.current.
-const oq33ActualAdmin=()=>data.current==='matthew';
+function oq33ActualAdmin(){ return typeof data !== 'undefined' && !!data && data.current === 'matthew'; }
 // Keep original lexical isAdmin unchanged: it is not exported on window.
 // Presentation-only player view is applied to V3.3 UI controls.
 // Goal editor: remove TDZ by changing its declaration in the base file to var; mount once.
@@ -89,8 +89,8 @@ function oq33UpdateShop(){if(page!=='rewards')return;document.querySelectorAll('
 function oq33EnsureAtlas(){if(typeof oqEnsureAtlasPages==='function')oqEnsureAtlasPages();for(let p of data.atlasPages||[])if(p.src&&(!atlasSources[p.id]||atlasSources[p.id].startsWith('blob:')))atlasSources[p.id]=p.src}
 const oq33RenderOld=window.render;
 window.render=function(){oq33EnsureAtlas();let out=oq33RenderOld.apply(this,arguments);document.querySelectorAll('.sidefoot').forEach(el=>{el.innerHTML=el.innerHTML.replace(/V\d+(?:\.\d+){1,2}/g,'V'+oq33Version);el.querySelectorAll('.oq32-version').forEach(x=>x.textContent='Our Quest V'+oq33Version)});
- if(oq33ActualAdmin()){let nav=document.querySelector('.sidefoot');if(nav&&!nav.querySelector('.oq33-toggle'))nav.insertAdjacentHTML('afterbegin',`<div class="oq33-toggle"><label>Matthew's View</label><select onchange="oq33SetView(this.value)"><option value="admin" ${oq33View==='admin'?'selected':''}>Admin View</option><option value="player" ${oq33View==='player'?'selected':''}>Player View</option></select></div>`)}
+ if(typeof oq33ActualAdmin === 'function' && oq33ActualAdmin()){let nav=document.querySelector('.sidefoot');if(nav&&!nav.querySelector('.oq33-toggle'))nav.insertAdjacentHTML('afterbegin',`<div class="oq33-toggle"><label>Matthew's View</label><select onchange="oq33SetView(this.value)"><option value="admin" ${oq33View==='admin'?'selected':''}>Admin View</option><option value="player" ${oq33View==='player'?'selected':''}>Player View</option></select></div>`)}
  oq33UpdateShop();return out};
 // Use local calendar dates rather than UTC date for seasonal windows.
 window.oq32Available=oq33Available;
-try{render()}catch(e){console.error('Our Quest 3.3 initialization',e)}
+// Do not force a second render at script evaluation time. Cloud bootstrap calls render after loading the authenticated state.
