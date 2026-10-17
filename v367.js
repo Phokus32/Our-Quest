@@ -1,0 +1,2 @@
+/* V3.6.7 display-size hotfix: atlas crop renderer from 3.6.6 is preserved. */
+(function(){const prev=window.render;if(typeof prev!=="function")return;window.render=function(){const result=prev.apply(this,arguments);document.querySelectorAll(".sidefoot").forEach(el=>{el.innerHTML=el.innerHTML.replace(/V3\.6\.[0-9]+/g,"V3.6.7")});return result};try{render()}catch(e){console.error("V3.6.7 render:",e)}})();

@@ -1,0 +1,17 @@
+/* V3.6.7: crop geometry is unchanged; only visual display boxes are constrained. */
+.oq366-icon{display:inline-block!important;box-sizing:border-box!important;width:48px!important;height:48px!important;min-width:0!important;min-height:0!important;max-width:48px!important;max-height:48px!important;aspect-ratio:1!important;flex:0 0 48px!important;vertical-align:middle!important;overflow:hidden!important;line-height:0!important}
+.oq366-icon>svg{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;overflow:hidden!important}
+/* Compact list cards and previews with explicit size containers. */
+.taskIcon .oq366-icon,.oq3-icon .oq366-icon,.oq362-quest-icon .oq366-icon,.oq362-icon .oq366-icon,.oq361-category-icon .oq366-icon,.oq33-category>span .oq366-icon,.reward-icon .oq366-icon,.milestone-icon .oq366-icon,.oq36-preview .oq366-icon,.icon-live-preview .oq366-icon{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;flex:0 0 100%!important}
+/* Coupon editing: medium preview, never full-width modal art. */
+.coupon-icon-picker .reward-icon,#v16CouponIconPreview{width:100px!important;height:100px!important;min-width:100px!important;max-width:100px!important;max-height:100px!important;flex:0 0 100px!important;overflow:hidden!important}
+/* Coupon management lists may render the icon directly, without a wrapper. */
+.modal .oq366-icon{max-width:100px!important;max-height:100px!important}
+.modal .reward-icon .oq366-icon{max-width:100%!important;max-height:100%!important}
+/* Goal icon beside title, rather than expanding the entire goal panel. */
+.oq3-weight-panel h2{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.oq3-weight-panel h2>.oq366-icon{width:96px!important;height:96px!important;max-width:96px!important;max-height:96px!important;flex:0 0 96px!important}
+.oq3-milestone .oq366-icon{max-width:100%!important;max-height:100%!important}
+/* Picker preview uses exactly the same renderer, but fits its existing box. */
+.oq36-preview .oq366-icon{max-width:100%!important;max-height:100%!important}
+@media(max-width:600px){.oq3-weight-panel h2>.oq366-icon{width:72px!important;height:72px!important;max-width:72px!important;max-height:72px!important;flex-basis:72px!important}}
